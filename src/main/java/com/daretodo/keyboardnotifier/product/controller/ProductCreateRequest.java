@@ -1,47 +1,17 @@
 package com.daretodo.keyboardnotifier.product.controller;
 
-import com.daretodo.keyboardnotifier.product.domain.Period;
 import com.daretodo.keyboardnotifier.product.domain.Product;
-import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
-import com.daretodo.keyboardnotifier.product.domain.ProductType;
-import java.time.LocalDateTime;
-import org.springframework.util.Assert;
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 
 public record ProductCreateRequest(
-    String name,
-    Long price,
-    String imageUrl,
-    ProductType productType,
-    ProductStatus productStatus,
-    String description,
-    LocalDateTime startDate,
-    LocalDateTime endDate
+    @Schema(description = "등록할 상품 리스트")
+    List<ProductDto> products
 ) {
 
-    public Product toProduct() {
-
-        if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("시작일은 종료일보다 이전이어야 합니다.");
-        }
-
-        Assert.hasText(name, "상품명은 필수입니다.");
-        Assert.notNull(price, "가격은 필수입니다.");
-        Assert.hasText(imageUrl, "이미지 URL은 필수입니다.");
-        Assert.notNull(productType, "상품 종류는 필수입니다.");
-
-        return new Product(
-            null,
-            name,
-            price,
-            imageUrl,
-            productType,
-            description,
-            Period.of(startDate, endDate),
-            productStatus,
-            null,
-            null,
-            null,
-            null
-        );
+    public List<Product> toProducts() {
+        return products.stream()
+            .map(ProductDto::toProduct)
+            .toList();
     }
 }

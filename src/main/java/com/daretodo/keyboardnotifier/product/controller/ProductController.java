@@ -19,7 +19,7 @@ public class ProductController {
 
     @Operation(summary = "상품 다건 등록")
     @PostMapping("/products")
-    public GiBiResponseBody<Integer> createProduct(@RequestBody ProductCreateRequests requests) {
+    public GiBiResponseBody<Integer> createProduct(@RequestBody ProductCreateRequest requests) {
         var createdCount = productService.createProducts(requests.toProducts());
         return GiBiResponseBody.success(createdCount);
     }
