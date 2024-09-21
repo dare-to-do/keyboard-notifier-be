@@ -34,36 +34,26 @@ jobs:
       - name: Run tests
         run: ./gradlew test
 
-      - name: Notify Slack on success
-        if: success()
+      - name: Notify Slack on test result
+        if: always()
         uses: 8398a7/action-slack@v3
         with:
-          status: success
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notify Slack on failure
-        if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: failure
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          status: ${{ job.status }}
           custom_payload: |
             {
-              "text": "테스트 실패...! @${{ github.event.pull_request.user.login }}님 확인해주세요.",
+              "text": "${{ job.status == 'success' ? '[gibi-be] unit test 성공!' : '[gibi-be] unit test 실패...! @${{ github.event.pull_request.user.login }}님 확인해주세요.' }}",
               "attachments": [
                 {
-                  "color": "danger",
+                  "color": "${{ job.status == 'success' ? 'good' : 'danger' }}",
                   "fields": [
                     {
-                      "title": "Repository",
-                      "value": "${{ github.repository }}",
+                      "title": "Service",
+                      "value": "Keyboard Notifier",
                       "short": true
                     },
                     {
-                      "title": "Commit",
-                      "value": "${{ github.sha }}",
+                      "title": "Status",
+                      "value": "${{ job.status == 'success' ? 'Test Succeeded' : 'Test Failed' }}",
                       "short": true
                     }
                   ]
