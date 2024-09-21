@@ -19,7 +19,7 @@ public class ProductsRequestCondition extends PageRequestCondition {
     private ProductSortBy sortBy = ProductSortBy.NEWEST;
 
     @Schema(description = "시작 페이지", defaultValue = "1")
-    private Integer page = 0;
+    private Integer page = 1;
 
     @Schema(description = "페이지 사이즈", defaultValue = "10")
     private Integer size = 10;
