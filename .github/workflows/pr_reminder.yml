@@ -2,7 +2,7 @@ name: PR Reminder
 
 on:
   schedule:
-    - cron: '0 1,4,10 * * 1-5'
+    - cron: '0 1,4,10 * * 0-6'
 
 jobs:
   pr-reviews-reminder:
