@@ -1,14 +1,13 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:17-jre-slim
+FROM openjdk:17.0.1-jdk-slim
 
-# Set the working directory in the container
+CMD ["./gradlew", "clean", "build"]
+
 WORKDIR /app
 
-# Copy the executable JAR file to the container
-COPY build/libs/keyboardNotifier.jar app.jar
+COPY src/main/resources/application.yml ./application.yml
 
-# Make port 8080 available to the world outside this container
+COPY build/libs/*.jar app.jar
+
 EXPOSE 8080
 
-# Run the JAR file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.config.location=file:///app/application.yml"]
