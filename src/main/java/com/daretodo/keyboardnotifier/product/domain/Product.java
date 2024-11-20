@@ -1,6 +1,7 @@
 package com.daretodo.keyboardnotifier.product.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +12,8 @@ public class Product {
     private Long id;
     private String name;
     private Long price;
-    private MonetaryUnit unit;
     private String[] imageUrl;
+    private PriceUnit unit;
     private String productUrl;
     private ProductType productType;
     private String description;
@@ -24,7 +25,8 @@ public class Product {
     private String updatedBy;
 
     @Builder
-    public Product(Long id, String name, Long price, MonetaryUnit unit, String[] imageUrl, String productUrl, ProductType productType, String description, Period period, ProductStatus status,
+    public Product(Long id, String name, Long price, PriceUnit unit, List<String> imageUrl, String productUrl,
+                   ProductType productType, String description, Period period, ProductStatus status,
                    LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
         this.id = id;
         this.name = name;

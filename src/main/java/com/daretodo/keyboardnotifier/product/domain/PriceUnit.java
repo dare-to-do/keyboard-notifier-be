@@ -3,7 +3,7 @@ package com.daretodo.keyboardnotifier.product.domain;
 import lombok.Getter;
 
 @Getter
-public enum MonetaryUnit {
+public enum PriceUnit {
     KRW("원", "₩"),
     USD("달러", "$"),
     EUR("유로", "€"),
@@ -15,13 +15,13 @@ public enum MonetaryUnit {
     private final String koreanName;
     private final String symbol;
 
-    MonetaryUnit(String koreanName, String symbol) {
+    PriceUnit(String koreanName, String symbol) {
         this.koreanName = koreanName;
         this.symbol = symbol;
     }
 
-    public static MonetaryUnit from(String value) {
-        for (MonetaryUnit unit : values()) {
+    public static PriceUnit from(String value) {
+        for (PriceUnit unit : values()) {
             if (unit.name().equals(value) || unit.koreanName.equals(value) || unit.symbol.equals(value)) {
                 return unit;
             }
