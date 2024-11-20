@@ -4,18 +4,22 @@ import com.daretodo.keyboardnotifier.product.domain.Period;
 import com.daretodo.keyboardnotifier.product.domain.Product;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
 import com.daretodo.keyboardnotifier.product.domain.ProductType;
+
 import java.time.LocalDateTime;
+
 import org.springframework.util.Assert;
 
 public record ProductDto(
-    String name,
-    Long price,
-    String imageUrl,
-    ProductType productType,
-    ProductStatus productStatus,
-    String description,
-    LocalDateTime startDate,
-    LocalDateTime endDate
+        String name,
+        Long price,
+        String unit,
+        String[] imageUrl,
+        String productUrl,
+        ProductType productType,
+        ProductStatus productStatus,
+        String description,
+        LocalDateTime startDate,
+        LocalDateTime endDate
 ) {
 
     public Product toProduct() {
@@ -30,18 +34,20 @@ public record ProductDto(
         Assert.notNull(productType, "상품 종류는 필수입니다.");
 
         return new Product(
-            null,
-            name,
-            price,
-            imageUrl,
-            productType,
-            description,
-            Period.of(startDate, endDate),
-            productStatus,
-            null,
-            null,
-            null,
-            null
+                null,
+                name,
+                price,
+                unit,
+                imageUrl,
+                productUrl,
+                productType,
+                description,
+                Period.of(startDate, endDate),
+                productStatus,
+                null,
+                null,
+                null,
+                null
         );
     }
 }
