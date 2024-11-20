@@ -32,8 +32,9 @@ public class ProductEntity extends BaseTimeEntity {
     @Column(name = "price")
     private Long price;
 
-    @Column(name = "unit")
-    private String unit;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "price_unit")
+    private PriceUnit priceUnit;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -61,12 +62,11 @@ public class ProductEntity extends BaseTimeEntity {
     public static ProductEntity fromDomain(Product product) {
         ProductEntity productEntity = new ProductEntity();
         String productImageUrl = convertFromListToString(product.getImageUrl());
-        MonetaryUnit monetaryUnit = product.getUnit();
 
         productEntity.id = product.getId();
         productEntity.name = product.getName();
         productEntity.price = product.getPrice();
-        productEntity.unit = monetaryUnit.getKoreanName();
+        productEntity.priceUnit = product.getUnit();
         productEntity.imageUrl = productImageUrl;
         productEntity.type = product.getProductType();
         productEntity.description = product.getDescription();
@@ -89,12 +89,16 @@ public class ProductEntity extends BaseTimeEntity {
     }
 
     public Product toProduct() {
+        List<String> imageUrls = new ArrayList<>();
+        for (String imageUrl : imageUrl.split(",")) {
+            imageUrls.add(imageUrl);
+        }
         return Product.builder()
                 .id(id)
                 .name(name)
                 .price(price)
-                .unit(MonetaryUnit.from(unit))
-                .imageUrl(imageUrl.split(","))
+                .unit(priceUnit)
+                .imageUrl(imageUrls)
                 .productUrl(productUrl)
                 .productType(type)
                 .description(description)
@@ -107,7 +111,7 @@ public class ProductEntity extends BaseTimeEntity {
                 .build();
     }
 
-    private static String convertFromListToString(String[] imageUrls) {
+    private static String convertFromListToString(List<String> imageUrls) {
         StringBuilder sb = new StringBuilder();
         for (String imageUrl : imageUrls) {
             sb.append(imageUrl).append(",");
