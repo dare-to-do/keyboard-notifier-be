@@ -15,8 +15,8 @@ public record ProductDto(
         String unit,
         String imageUrl,
         String productUrl,
-        ProductType productType,
         ProductStatus productStatus,
+        String productType,
         String description,
         LocalDateTime startDate,
         LocalDateTime endDate
@@ -44,7 +44,7 @@ public record ProductDto(
                 imageUrl,
                 imageUrls,
                 productUrl,
-                productType,
+                ProductType.from(productType),
                 description,
                 Period.of(startDate, endDate),
                 productStatus,
