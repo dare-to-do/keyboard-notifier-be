@@ -54,10 +54,12 @@ public record ProductDto(
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(startDate)) {
             return ProductStatus.NOT_YET;
-        } else if (now.isAfter(endDate)) {
-            return ProductStatus.DONE;
-        } else {
-            return ProductStatus.IN_PROGRESS;
         }
+
+        if (now.isAfter(endDate)) {
+            return ProductStatus.DONE;
+        }
+
+        return ProductStatus.IN_PROGRESS;
     }
 }
