@@ -11,7 +11,7 @@ public class Product {
     private Long id;
     private String name;
     private Long price;
-    private String unit;
+    private MonetaryUnit unit;
     private String[] imageUrl;
     private String productUrl;
     private ProductType productType;
@@ -24,7 +24,7 @@ public class Product {
     private String updatedBy;
 
     @Builder
-    public Product(Long id, String name, Long price, String unit, String[] imageUrl, String productUrl, ProductType productType, String description, Period period, ProductStatus status,
+    public Product(Long id, String name, Long price, MonetaryUnit unit, String[] imageUrl, String productUrl, ProductType productType, String description, Period period, ProductStatus status,
                    LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
         this.id = id;
         this.name = name;
