@@ -55,10 +55,12 @@ public class ProductEntity extends BaseTimeEntity {
 
     public static ProductEntity fromDomain(Product product) {
         ProductEntity productEntity = new ProductEntity();
+        String productImageUrl = convertFromListToString(product.getImageUrl());
+
         productEntity.id = product.getId();
         productEntity.name = product.getName();
         productEntity.price = product.getPrice();
-        productEntity.imageUrl = product.getImageUrl();
+        productEntity.imageUrl = productImageUrl;
         productEntity.type = product.getProductType();
         productEntity.description = product.getDescription();
         productEntity.startDate = product.getPeriod().startDate();
@@ -94,5 +96,14 @@ public class ProductEntity extends BaseTimeEntity {
             .updatedAt(updatedAt)
             .updatedBy(updatedBy)
             .build();
+    }
+
+    private static String convertFromListToString(String[] imageUrls) {
+        StringBuilder sb = new StringBuilder();
+        for (String imageUrl : imageUrls) {
+            sb.append(imageUrl).append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }
