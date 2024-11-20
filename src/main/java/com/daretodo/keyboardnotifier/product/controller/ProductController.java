@@ -1,6 +1,6 @@
 package com.daretodo.keyboardnotifier.product.controller;
 
-import com.daretodo.keyboardnotifier.common.GiBiResponseBody;
+import com.daretodo.keyboardnotifier.common.SokeyResponseBody;
 import com.daretodo.keyboardnotifier.common.PageableOutput;
 import com.daretodo.keyboardnotifier.product.application.ProductResponse;
 import com.daretodo.keyboardnotifier.product.application.ProductService;
@@ -19,14 +19,14 @@ public class ProductController {
     @PostMapping
     public SokeyResponseBody<Integer> createProduct(@RequestBody ProductCreateRequest requests) {
         var createdCount = productService.createProducts(requests.toProducts());
-        return GiBiResponseBody.success(createdCount);
+        return SokeyResponseBody.success(createdCount);
     }
 
     @Operation(summary = "상품 전체 조회")
     @GetMapping
     public SokeyResponseBody<PageableOutput<ProductResponse>> findAllProducts(ProductsRequestCondition condition) {
         var products = productService.findAllProducts(condition.getProductStatus(), condition.getProductType(), condition.getPageable(), condition.getSortBy());
-        return GiBiResponseBody.success(new PageableOutput<>(products));
+        return SokeyResponseBody.success(new PageableOutput<>(products));
     }
 
     @Operation(summary = "특정 상품 조회")
