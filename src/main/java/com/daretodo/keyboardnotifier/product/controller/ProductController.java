@@ -6,10 +6,7 @@ import com.daretodo.keyboardnotifier.product.application.ProductResponse;
 import com.daretodo.keyboardnotifier.product.application.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,4 +28,12 @@ public class ProductController {
         var products = productService.findAllProducts(condition.getProductStatus(), condition.getProductType(), condition.getPageable(), condition.getSortBy());
         return GiBiResponseBody.success(new PageableOutput<>(products));
     }
+
+    @Operation(summary = "특정 상품 조회")
+    @GetMapping("/{id}")
+    public SokeyResponseBody<ProductResponse> findProduct(@PathVariable Long id) {
+        var product = productService.findProduct(id);
+        return SokeyResponseBody.success(product);
+    }
+
 }
