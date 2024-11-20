@@ -13,9 +13,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Getter;
 
 @Entity
@@ -33,8 +35,14 @@ public class ProductEntity extends BaseTimeEntity {
     @Column(name = "price")
     private Long price;
 
+    @Column(name = "unit")
+    private String unit;
+
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "product_url")
+    private String productUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", length = 40)
@@ -60,6 +68,7 @@ public class ProductEntity extends BaseTimeEntity {
         productEntity.id = product.getId();
         productEntity.name = product.getName();
         productEntity.price = product.getPrice();
+        productEntity.unit = product.getUnit();
         productEntity.imageUrl = productImageUrl;
         productEntity.type = product.getProductType();
         productEntity.description = product.getDescription();
@@ -83,19 +92,21 @@ public class ProductEntity extends BaseTimeEntity {
 
     public Product toProduct() {
         return Product.builder()
-            .id(id)
-            .name(name)
-            .price(price)
-            .imageUrl(imageUrl)
-            .productType(type)
-            .description(description)
-            .period(Period.of(startDate, endDate))
-            .status(status)
-            .createdAt(createdAt)
-            .createdBy(createdBy)
-            .updatedAt(updatedAt)
-            .updatedBy(updatedBy)
-            .build();
+                .id(id)
+                .name(name)
+                .price(price)
+                .unit(unit)
+                .imageUrl(imageUrl.split(","))
+                .productUrl(productUrl)
+                .productType(type)
+                .description(description)
+                .period(Period.of(startDate, endDate))
+                .status(status)
+                .createdAt(createdAt)
+                .createdBy(createdBy)
+                .updatedAt(updatedAt)
+                .updatedBy(updatedBy)
+                .build();
     }
 
     private static String convertFromListToString(String[] imageUrls) {
