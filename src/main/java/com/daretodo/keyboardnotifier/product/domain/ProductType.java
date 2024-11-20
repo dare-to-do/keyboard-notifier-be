@@ -14,4 +14,13 @@ public enum ProductType {
     ProductType(String koreanName) {
         this.koreanName = koreanName;
     }
+
+    public static ProductType from(String value) {
+        for (ProductType type : values()) {
+            if (type.koreanName.equals(value) || type.name().equals(value)) {
+                return type;
+            }
+        }
+        return ETC;
+    }
 }
