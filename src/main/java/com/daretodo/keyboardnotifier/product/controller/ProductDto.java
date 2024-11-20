@@ -1,9 +1,6 @@
 package com.daretodo.keyboardnotifier.product.controller;
 
-import com.daretodo.keyboardnotifier.product.domain.Period;
-import com.daretodo.keyboardnotifier.product.domain.Product;
-import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
-import com.daretodo.keyboardnotifier.product.domain.ProductType;
+import com.daretodo.keyboardnotifier.product.domain.*;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +12,6 @@ public record ProductDto(
         String unit,
         String imageUrl,
         String productUrl,
-        ProductStatus productStatus,
         String productType,
         String description,
         LocalDateTime startDate,
@@ -46,11 +42,22 @@ public record ProductDto(
                 ProductType.from(productType),
                 description,
                 Period.of(startDate, endDate),
-                productStatus,
+                getProductStatus(startDate, endDate),
                 null,
                 null,
                 null,
                 null
         );
+    }
+
+    private ProductStatus getProductStatus(LocalDateTime startDate, LocalDateTime endDate) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(startDate)) {
+            return ProductStatus.NOT_YET;
+        } else if (now.isAfter(endDate)) {
+            return ProductStatus.DONE;
+        } else {
+            return ProductStatus.IN_PROGRESS;
+        }
     }
 }
