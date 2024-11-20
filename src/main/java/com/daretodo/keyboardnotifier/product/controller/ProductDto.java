@@ -13,7 +13,7 @@ public record ProductDto(
         String name,
         Long price,
         String unit,
-        String[] imageUrl,
+        String imageUrl,
         String productUrl,
         ProductType productType,
         ProductStatus productStatus,
