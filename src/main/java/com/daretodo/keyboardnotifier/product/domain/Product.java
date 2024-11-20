@@ -12,8 +12,8 @@ public class Product {
     private Long id;
     private String name;
     private Long price;
-    private String[] imageUrl;
     private PriceUnit unit;
+    private List<String> imageUrl;
     private String productUrl;
     private ProductType productType;
     private String description;
