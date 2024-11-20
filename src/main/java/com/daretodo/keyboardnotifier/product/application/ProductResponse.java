@@ -17,6 +17,7 @@ public record ProductResponse(
 ) {
 
     public static ProductResponse fromEntity(ProductEntity productEntity) {
+        String[] imageUrls = productEntity.getImageUrl().split(",");
         return new ProductResponse(
             productEntity.getName(),
             productEntity.getPrice(),
