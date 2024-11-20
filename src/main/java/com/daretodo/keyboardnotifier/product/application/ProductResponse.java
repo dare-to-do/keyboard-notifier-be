@@ -24,7 +24,7 @@ public record ProductResponse(
         return new ProductResponse(
                 productEntity.getName(),
                 productEntity.getPrice(),
-                productEntity.getUnit(),
+                productEntity.getPriceUnit().getKoreanName(),
                 imageUrls,
                 productEntity.getProductUrl(),
                 productEntity.getDescription(),
