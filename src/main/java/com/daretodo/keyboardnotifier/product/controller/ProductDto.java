@@ -30,7 +30,7 @@ public record ProductDto(
 
         Assert.hasText(name, "상품명은 필수입니다.");
         Assert.notNull(price, "가격은 필수입니다.");
-        Assert.hasText(imageUrl, "이미지 URL은 필수입니다.");
+        Assert.hasText(imageUrl[0], "이미지 URL은 필수입니다.");
         Assert.notNull(productType, "상품 종류는 필수입니다.");
 
         return new Product(
