@@ -10,7 +10,7 @@ public class Product {
     private Long id;
     private String name;
     private Long price;
-    private String imageUrl;
+    private String[] imageUrl;
     private ProductType productType;
     private String description;
     private Period period;
