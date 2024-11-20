@@ -6,4 +6,5 @@ public enum ProductType {
     SWITCH,
     KEY_CAP,
     STABILIZER,
+    PARTS,
 }
