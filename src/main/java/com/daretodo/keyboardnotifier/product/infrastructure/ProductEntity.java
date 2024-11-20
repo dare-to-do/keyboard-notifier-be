@@ -1,10 +1,7 @@
 package com.daretodo.keyboardnotifier.product.infrastructure;
 
 import com.daretodo.keyboardnotifier.common.BaseTimeEntity;
-import com.daretodo.keyboardnotifier.product.domain.Period;
-import com.daretodo.keyboardnotifier.product.domain.Product;
-import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
-import com.daretodo.keyboardnotifier.product.domain.ProductType;
+import com.daretodo.keyboardnotifier.product.domain.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -64,11 +61,12 @@ public class ProductEntity extends BaseTimeEntity {
     public static ProductEntity fromDomain(Product product) {
         ProductEntity productEntity = new ProductEntity();
         String productImageUrl = convertFromListToString(product.getImageUrl());
+        MonetaryUnit monetaryUnit = product.getUnit();
 
         productEntity.id = product.getId();
         productEntity.name = product.getName();
         productEntity.price = product.getPrice();
-        productEntity.unit = product.getUnit();
+        productEntity.unit = monetaryUnit.getKoreanName();
         productEntity.imageUrl = productImageUrl;
         productEntity.type = product.getProductType();
         productEntity.description = product.getDescription();
@@ -95,7 +93,7 @@ public class ProductEntity extends BaseTimeEntity {
                 .id(id)
                 .name(name)
                 .price(price)
-                .unit(unit)
+                .unit(MonetaryUnit.from(unit))
                 .imageUrl(imageUrl.split(","))
                 .productUrl(productUrl)
                 .productType(type)
