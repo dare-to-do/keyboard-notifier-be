@@ -3,17 +3,17 @@ package com.daretodo.keyboardnotifier.product.infrastructure;
 import static com.daretodo.keyboardnotifier.product.infrastructure.QProductEntity.*;
 
 import com.daretodo.keyboardnotifier.product.application.ProductRepository;
-import com.daretodo.keyboardnotifier.product.application.ProductResponse;
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
 import com.daretodo.keyboardnotifier.product.domain.Product;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
 import com.daretodo.keyboardnotifier.product.domain.ProductType;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
@@ -53,9 +53,14 @@ public class ProductRepositoryImpl implements ProductRepository {
         }
 
         List<ProductEntity> productEntities = query.offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .fetch();
+                .limit(pageable.getPageSize())
+                .fetch();
 
         return PageableExecutionUtils.getPage(productEntities, pageable, () -> query.fetch().size());
+    }
+
+    @Override
+    public ProductEntity findById(Long id) {
+        return productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
     }
 }

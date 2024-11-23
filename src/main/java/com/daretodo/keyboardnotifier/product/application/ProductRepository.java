@@ -14,4 +14,6 @@ public interface ProductRepository {
     Integer saveAll(List<Product> products);
 
     Page<ProductEntity> findAllProducts(ProductStatus productStatus, ProductType productType, Pageable pageable, ProductSortBy sortBy);
+
+    ProductEntity findById(Long id);
 }

@@ -28,4 +28,10 @@ public class ProductService {
         Page<ProductEntity> productEntities = productRepository.findAllProducts(productStatus, productType, pageable, sortBy);
         return productEntities.map(ProductResponse::fromEntity);
     }
+
+    @Transactional(readOnly = true)
+    public ProductResponse findProduct(Long id) {
+        ProductEntity productEntity = productRepository.findById(id);
+        return ProductResponse.fromEntity(productEntity);
+    }
 }

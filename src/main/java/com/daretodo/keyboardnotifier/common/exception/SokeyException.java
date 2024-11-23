@@ -4,22 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class GiBiException extends RuntimeException {
+public class SokeyException extends RuntimeException {
 
     private Integer code;
     @Setter
     private Object data;
 
-    public GiBiException(String message, Throwable cause) {
+    public SokeyException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public GiBiException(Integer code, String message) {
+    public SokeyException(Integer code, String message) {
         super(message);
         this.code = code;
     }
 
-    public GiBiException(String message) {
+    public SokeyException(String message) {
         super(message);
     }
 

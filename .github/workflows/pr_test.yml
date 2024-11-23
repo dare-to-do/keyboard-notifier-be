@@ -41,7 +41,7 @@ jobs:
           status: ${{ job.status }}
           custom_payload: |
             {
-              "text": "${{ job.status == 'success' ? '[gibi-be] unit test 성공!' : '[gibi-be] unit test 실패...! @${{ github.event.pull_request.user.login }}님 확인해주세요.' }}",
+              "text": "${{ job.status == 'success' ? '[sokey-be] unit test 성공!' : '[sokey-be] unit test 실패...! @${{ github.event.pull_request.user.login }}님 확인해주세요.' }}",
               "attachments": [
                 {
                   "color": "${{ job.status == 'success' ? 'good' : 'danger' }}",

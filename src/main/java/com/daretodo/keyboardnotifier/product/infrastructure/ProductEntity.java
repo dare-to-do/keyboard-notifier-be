@@ -1,10 +1,7 @@
 package com.daretodo.keyboardnotifier.product.infrastructure;
 
 import com.daretodo.keyboardnotifier.common.BaseTimeEntity;
-import com.daretodo.keyboardnotifier.product.domain.Period;
-import com.daretodo.keyboardnotifier.product.domain.Product;
-import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
-import com.daretodo.keyboardnotifier.product.domain.ProductType;
+import com.daretodo.keyboardnotifier.product.domain.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,9 +10,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.Getter;
 
 @Entity
@@ -33,8 +32,14 @@ public class ProductEntity extends BaseTimeEntity {
     @Column(name = "price")
     private Long price;
 
+    @Column(name = "unit")
+    private String unit;
+
     @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "product_url")
+    private String productUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", length = 40)
@@ -55,10 +60,14 @@ public class ProductEntity extends BaseTimeEntity {
 
     public static ProductEntity fromDomain(Product product) {
         ProductEntity productEntity = new ProductEntity();
+        String productImageUrl = convertFromListToString(product.getImageUrl());
+        MonetaryUnit monetaryUnit = product.getUnit();
+
         productEntity.id = product.getId();
         productEntity.name = product.getName();
         productEntity.price = product.getPrice();
-        productEntity.imageUrl = product.getImageUrl();
+        productEntity.unit = monetaryUnit.getKoreanName();
+        productEntity.imageUrl = productImageUrl;
         productEntity.type = product.getProductType();
         productEntity.description = product.getDescription();
         productEntity.startDate = product.getPeriod().startDate();
@@ -81,18 +90,29 @@ public class ProductEntity extends BaseTimeEntity {
 
     public Product toProduct() {
         return Product.builder()
-            .id(id)
-            .name(name)
-            .price(price)
-            .imageUrl(imageUrl)
-            .productType(type)
-            .description(description)
-            .period(Period.of(startDate, endDate))
-            .status(status)
-            .createdAt(createdAt)
-            .createdBy(createdBy)
-            .updatedAt(updatedAt)
-            .updatedBy(updatedBy)
-            .build();
+                .id(id)
+                .name(name)
+                .price(price)
+                .unit(MonetaryUnit.from(unit))
+                .imageUrl(imageUrl.split(","))
+                .productUrl(productUrl)
+                .productType(type)
+                .description(description)
+                .period(Period.of(startDate, endDate))
+                .status(status)
+                .createdAt(createdAt)
+                .createdBy(createdBy)
+                .updatedAt(updatedAt)
+                .updatedBy(updatedBy)
+                .build();
+    }
+
+    private static String convertFromListToString(String[] imageUrls) {
+        StringBuilder sb = new StringBuilder();
+        for (String imageUrl : imageUrls) {
+            sb.append(imageUrl).append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
     }
 }
