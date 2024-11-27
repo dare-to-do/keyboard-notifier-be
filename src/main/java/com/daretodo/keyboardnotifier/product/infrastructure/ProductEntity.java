@@ -36,10 +36,10 @@ public class ProductEntity extends BaseTimeEntity {
     @Column(name = "price_unit")
     private PriceUnit priceUnit;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", length = 5000)
     private String imageUrl;
 
-    @Column(name = "product_url")
+    @Column(name = "product_url", length = 500)
     private String productUrl;
 
     @Enumerated(EnumType.STRING)
@@ -115,6 +115,9 @@ public class ProductEntity extends BaseTimeEntity {
         StringBuilder sb = new StringBuilder();
         for (String imageUrl : imageUrls) {
             sb.append(imageUrl).append(",");
+        }
+        if (sb.isEmpty()) {
+            return "";
         }
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
