@@ -1,4 +1,4 @@
-package com.daretodo.keyboardnotifier.product.application;
+package com.daretodo.keyboardnotifier.product.application.dto;
 
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
 import com.daretodo.keyboardnotifier.product.domain.ProductType;
@@ -15,8 +15,8 @@ public record ProductResponse(
         String description,
         LocalDateTime startDate,
         LocalDateTime endDate,
-        ProductStatus status,
-        ProductType type
+        ProductStatus productStatus,
+        ProductType productType
 ) {
 
     public static ProductResponse fromEntity(ProductEntity productEntity) {
@@ -24,7 +24,7 @@ public record ProductResponse(
         return new ProductResponse(
                 productEntity.getName(),
                 productEntity.getPrice(),
-                productEntity.getUnit(),
+                productEntity.getPriceUnit().getKoreanName(),
                 imageUrls,
                 productEntity.getProductUrl(),
                 productEntity.getDescription(),

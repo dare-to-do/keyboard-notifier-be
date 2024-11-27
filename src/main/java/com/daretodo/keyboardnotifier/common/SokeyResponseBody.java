@@ -2,6 +2,7 @@ package com.daretodo.keyboardnotifier.common;
 
 import com.daretodo.keyboardnotifier.common.exception.SokeyException;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 public class SokeyResponseBody<T> {
@@ -12,14 +13,14 @@ public class SokeyResponseBody<T> {
 
     public static <T> SokeyResponseBody<T> success() {
         SokeyResponseBody<T> responseBody = new SokeyResponseBody<>();
-        responseBody.code = 0;
+        responseBody.code = HttpStatus.OK.value();
         responseBody.message = "정상 처리되었습니다.";
         return responseBody;
     }
 
     public static <T> SokeyResponseBody<T> success(T data) {
         SokeyResponseBody<T> responseBody = new SokeyResponseBody<>();
-        responseBody.code = 0;
+        responseBody.code = HttpStatus.OK.value();
         responseBody.message = "정상 처리되었습니다.";
         responseBody.data(data);
         return responseBody;

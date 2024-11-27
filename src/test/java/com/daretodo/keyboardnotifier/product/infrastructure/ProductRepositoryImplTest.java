@@ -41,7 +41,7 @@ class ProductRepositoryImplTest {
         }
 
         @Test
-        void 공재_진행중인_상품만_필터링_검색을_할수있다() {
+        void 공제_진행중인_상품만_필터링_검색을_할수있다() {
             // given
             PageRequest pageRequest = PageRequest.of(0, 10);
 
@@ -67,7 +67,7 @@ class ProductRepositoryImplTest {
         }
 
         @Test
-        void 공재_진행여부와_상품유형으로_필터링_검색을_할수있다() {
+        void 공제_진행여부와_상품유형으로_필터링_검색을_할수있다() {
             // given
             PageRequest pageRequest = PageRequest.of(0, 10);
 

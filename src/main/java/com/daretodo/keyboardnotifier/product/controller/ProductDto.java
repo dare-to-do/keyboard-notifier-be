@@ -3,6 +3,8 @@ package com.daretodo.keyboardnotifier.product.controller;
 import com.daretodo.keyboardnotifier.product.domain.*;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.util.Assert;
 
@@ -24,11 +26,11 @@ public record ProductDto(
             throw new IllegalArgumentException("시작일은 종료일보다 이전이어야 합니다.");
         }
 
-        String[] imageUrls = imageUrl.split(",");
+        List<String> imageUrls = Arrays.asList(imageUrl.split(","));
 
         Assert.hasText(name, "상품명은 필수입니다.");
         Assert.notNull(price, "가격은 필수입니다.");
-        Assert.hasText(imageUrls[0], "이미지 URL은 필수입니다.");
+        Assert.notNull(imageUrls, "이미지 URL은 필수입니다.");
         Assert.hasText(productUrl, "상품 URL은 필수입니다.");
         Assert.notNull(productType, "상품 종류는 필수입니다.");
 
@@ -36,7 +38,7 @@ public record ProductDto(
                 null,
                 name,
                 price,
-                MonetaryUnit.from(unit),
+                PriceUnit.from(unit),
                 imageUrls,
                 productUrl,
                 ProductType.from(productType),

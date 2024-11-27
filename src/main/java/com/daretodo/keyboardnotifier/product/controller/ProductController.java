@@ -2,8 +2,9 @@ package com.daretodo.keyboardnotifier.product.controller;
 
 import com.daretodo.keyboardnotifier.common.SokeyResponseBody;
 import com.daretodo.keyboardnotifier.common.PageableOutput;
-import com.daretodo.keyboardnotifier.product.application.ProductResponse;
+import com.daretodo.keyboardnotifier.product.application.dto.ProductResponse;
 import com.daretodo.keyboardnotifier.product.application.ProductService;
+import com.daretodo.keyboardnotifier.product.controller.dto.ProductCreateRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
