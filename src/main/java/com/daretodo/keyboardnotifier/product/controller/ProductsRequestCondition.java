@@ -3,8 +3,11 @@ package com.daretodo.keyboardnotifier.product.controller;
 import com.daretodo.keyboardnotifier.common.PageRequestCondition;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
 import com.daretodo.keyboardnotifier.product.domain.ProductType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Getter
 public class ProductsRequestCondition extends PageRequestCondition {
@@ -23,4 +26,10 @@ public class ProductsRequestCondition extends PageRequestCondition {
 
     @Schema(description = "페이지 사이즈", defaultValue = "10")
     private Integer size = 10;
+
+    @Override
+    @JsonIgnore
+    public Pageable getPageable() {
+        return PageRequest.of(page - 1, size);
+    }
 }
