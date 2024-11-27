@@ -20,12 +20,14 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 class ProductServiceIntegrationTest {
 
     @Autowired
+    private ProductService sut;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Test
     void 상품을_생성한다() {
         // given
-        var sut = new ProductService(productRepository);
         FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
                 .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
                 .build();
@@ -51,7 +53,6 @@ class ProductServiceIntegrationTest {
     @Test
     void 전체_상품을_조회한다() {
         // given
-        var sut = new ProductService(productRepository);
         FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
                 .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
                 .build();
@@ -90,7 +91,6 @@ class ProductServiceIntegrationTest {
     @Test
     void 특정_상품을_조회한다() {
         // given
-        var sut = new ProductService(productRepository);
         FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
                 .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
                 .build();
