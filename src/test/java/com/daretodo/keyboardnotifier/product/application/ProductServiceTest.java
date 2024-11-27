@@ -3,6 +3,8 @@ package com.daretodo.keyboardnotifier.product.application;
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
 import com.daretodo.keyboardnotifier.product.controller.ProductsRequestCondition;
 import com.daretodo.keyboardnotifier.product.domain.*;
+import com.navercorp.fixturemonkey.FixtureMonkey;
+import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static com.navercorp.fixturemonkey.api.expression.JavaGetterMethodPropertySelector.javaGetter;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
 
 @SpringBootTest
 class ProductServiceTest {
@@ -22,49 +26,83 @@ class ProductServiceTest {
     void 상품을_생성한다() {
         // given
         var sut = new ProductService(productRepository);
-        Product product1 = createProduct(1L, "Product A", 1000, PriceUnit.KRW, List.of("image1", "image2"), "productUrl1",
-                ProductType.KEYBOARD, "description1", Period.from(LocalDateTime.parse("2024-11-25T00:00:00")), ProductStatus.IN_PROGRESS,
-                LocalDateTime.now(), "admin", LocalDateTime.now(), "admin");
-        Product product2 = createProduct(2L, "Product B", 2000, PriceUnit.KRW, List.of("image3", "image4"), "productUrl2",
-                ProductType.KEYBOARD, "description2", Period.of(LocalDateTime.parse("2024-11-11T00:00:00"), LocalDateTime.parse("2024-11-30T00:00:00")), ProductStatus.IN_PROGRESS,
-                LocalDateTime.now(), "admin", LocalDateTime.now(), "admin");
+        FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
+                .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+                .build();
+        Product product1 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 1L)
+                .set(javaGetter(Product::getName), "Product A")
+                .setNotNull(javaGetter(Product::getPeriod))
+                .sample();
+        Product product2 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 2L)
+                .set(javaGetter(Product::getName), "Product B")
+                .setNotNull(javaGetter(Product::getPeriod))
+                .sample();
         List<Product> products = List.of(product1, product2);
 
         // when
         var result = sut.createProducts(products);
 
         // then
-        assertEquals(2, result);
+        assertThat(result).isEqualTo(2);
     }
 
     @Test
     void 전체_상품을_조회한다() {
         // given
         var sut = new ProductService(productRepository);
-        Product product1 = createProduct(1L, "Product A", 1000, PriceUnit.KRW, List.of("image1", "image2"), "productUrl1",
-                ProductType.KEYBOARD, "description1", Period.from(LocalDateTime.parse("2024-11-25T00:00:00")), ProductStatus.IN_PROGRESS,
-                LocalDateTime.now(), "admin", LocalDateTime.now(), "admin");
-        Product product2 = createProduct(2L, "Product B", 2000, PriceUnit.KRW, List.of("image3", "image4"), "productUrl2",
-                ProductType.KEYBOARD, "description2", Period.of(LocalDateTime.parse("2024-11-11T00:00:00"), LocalDateTime.parse("2024-11-30T00:00:00")), ProductStatus.IN_PROGRESS,
-                LocalDateTime.now(), "admin", LocalDateTime.now(), "admin");
+        FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
+                .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+                .build();
+        Product product1 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 1L)
+                .set(javaGetter(Product::getName), "Product A")
+                .set(javaGetter(Product::getCreatedAt), LocalDateTime.now().minusDays(1))
+                .setNotNull(javaGetter(Product::getUnit))
+                .setNotNull(javaGetter(Product::getPeriod))
+                .sample();
+        Product product2 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 2L)
+                .set(javaGetter(Product::getName), "Product B")
+                .set(javaGetter(Product::getCreatedAt), LocalDateTime.now())
+                .setNotNull(javaGetter(Product::getUnit))
+                .setNotNull(javaGetter(Product::getPeriod))
+                .sample();
+
+        ProductsRequestCondition condition = fixtureMonkey.giveMeBuilder(ProductsRequestCondition.class)
+                .set(javaGetter(ProductsRequestCondition::getPage), 1)
+                .set(javaGetter(ProductsRequestCondition::getSize), 10)
+                .sample();
+
         List<Product> products = List.of(product1, product2);
         productRepository.saveAll(products);
-        ProductsRequestCondition condition = new ProductsRequestCondition(ProductStatus.IN_PROGRESS, ProductType.KEYBOARD, ProductSortBy.NEWEST, 2, 10);
 
         // when
-        var result = sut.findAllProducts(condition);
+        var result = sut.findAllProducts(null, null, condition.getPageable(), ProductSortBy.NEWEST);
 
         // then
-        assertEquals(2, result.getTotalElements());
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getContent().get(0).name()).isEqualTo("Product B");
+        assertThat(result.getContent().get(1).name()).isEqualTo("Product A");
     }
 
     @Test
     void 특정_상품을_조회한다() {
         // given
         var sut = new ProductService(productRepository);
-        Product product = createProduct(1L, "Product A", 1000, PriceUnit.KRW, List.of("image1", "image2"), "productUrl1",
-                ProductType.KEYBOARD, "description1", Period.from(LocalDateTime.parse("2024-11-25T00:00:00")), ProductStatus.IN_PROGRESS,
-                LocalDateTime.now(), "admin", LocalDateTime.now(), "admin");
+        FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
+                .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+                .build();
+
+        Product product = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 1L)
+                .set(javaGetter(Product::getName), "Product A")
+                .set(javaGetter(Product::getPrice), 1000L)
+                .set(javaGetter(Product::getUnit), PriceUnit.KRW)
+                .setNotNull(javaGetter(Product::getPeriod))
+                .sample();
+
         List<Product> products = List.of(product);
         productRepository.saveAll(products);
 
@@ -72,20 +110,8 @@ class ProductServiceTest {
         var result = sut.findProduct(1L);
 
         // then
-        assertEquals(product.getName(), result.name());
-        assertEquals(product.getPrice(), result.price());
+        assertThat(result.name()).isEqualTo("Product A");
+        assertThat(result.price()).isEqualTo(1000L);
     }
 
-    private Product createProduct(Long id, String name, long price, PriceUnit unit, List<String> imageUrl,
-                                  String productUrl, ProductType productType, String description, Period period,
-                                  ProductStatus status, LocalDateTime createdAt, String createdBy,
-                                  LocalDateTime updatedAt, String updatedBy) {
-        return Product.builder()
-                .id(id).name(name).price(price).unit(unit)
-                .imageUrl(imageUrl).productUrl(productUrl).productType(productType).description(description)
-                .period(period).status(status).createdAt(createdAt).createdBy(createdBy)
-                .updatedAt(updatedAt).updatedBy(updatedBy).build();
-
-
-    }
 }
