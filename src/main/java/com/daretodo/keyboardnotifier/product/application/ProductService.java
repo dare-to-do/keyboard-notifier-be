@@ -1,5 +1,6 @@
 package com.daretodo.keyboardnotifier.product.application;
 
+import com.daretodo.keyboardnotifier.product.application.dto.ProductResponse;
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
 import com.daretodo.keyboardnotifier.product.domain.Product;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;

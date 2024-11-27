@@ -1,5 +1,6 @@
-package com.daretodo.keyboardnotifier.product.controller;
+package com.daretodo.keyboardnotifier.product.controller.dto;
 
+import com.daretodo.keyboardnotifier.product.controller.ProductDto;
 import com.daretodo.keyboardnotifier.product.domain.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
