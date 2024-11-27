@@ -17,7 +17,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 
 @SpringBootTest
-class ProductServiceTest {
+class ProductServiceIntegrationTest {
 
     @Autowired
     private ProductRepository productRepository;
