@@ -31,7 +31,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Page<ProductEntity> findAllProducts(ProductStatus productStatus, ProductType productType, Pageable pageable, ProductSortBy sortBy) {
+    public Page<ProductEntity> findAllProducts(ProductStatus productStatus, ProductType productType,
+                                               Pageable pageable, ProductSortBy sortBy) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (productStatus != null) {
