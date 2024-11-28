@@ -1,0 +1,60 @@
+name: Publish on Develop
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    env:
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+      DOCKER_TAG: d.$(date +'%y%m%d')-2
+
+    steps:
+      # Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Set up Java (if your project uses Java, you can adjust this)
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Build the project (adjust command based on your build system)
+      - name: Build Project
+        run: ./gradlew build
+
+      # Build Docker image
+      - name: Build Docker Image
+        run: |
+          docker build -t dare-to-do/keyboard-notifier-be:${{ env.DOCKER_TAG }} .
+
+      # Push Docker image to Docker Hub (or your registry)
+      - name: Push Docker Image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          docker push dare-to-do/keyboard-notifier-be:${{ env.DOCKER_TAG }}
+
+      # Send Slack Notification
+      - name: Send Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          message: |
+            :white_check_mark: *keyboard-notifier-be 환경 빌드 완료*
+            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Branch*: `develop`
+            *Github Action*: `publish on develop`
+            *Actor*: `${{ github.actor }}`
+            *Docker Tag*: `${{ env.DOCKER_TAG }}`
+            *Deploy*: `deploy-develop`
+          username: "GitHub Actions"
+          icon_emoji: ":rocket:"

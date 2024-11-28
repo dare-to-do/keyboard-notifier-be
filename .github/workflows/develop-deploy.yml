@@ -1,0 +1,86 @@
+name: Deploy to EC2 Manually with Slack Notifications
+
+on:
+  workflow_dispatch:
+    inputs:
+      docker_tag:
+        description: "Docker Tag to deploy (e.g., d.241118-2)"
+        required: true
+        default: "latest"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_IMAGE: dare-to-do/keyboard-notifier-be:${{ github.event.inputs.docker_tag }}
+      EC2_HOST: ${{ secrets.EC2_HOST }}
+      EC2_USER: ${{ secrets.EC2_USER }}
+      EC2_KEY: ${{ secrets.EC2_KEY }}
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    steps:
+      # Notify deployment started
+      - name: Notify Slack (Deployment Started)
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          webhook_url: ${{ env.SLACK_WEBHOOK_URL }}
+          message: |
+            :hourglass_flowing_sand: *배포 실행중입니다*
+            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Branch*: `develop`
+            *Docker Tag*: `${{ github.event.inputs.docker_tag }}`
+          username: "GitHub Actions"
+          icon_emoji: ":rocket:"
+
+      # Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Deploy to EC2
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USER }}
+          key: ${{ env.EC2_KEY }}
+          port: 22
+          script: |
+            # Stop existing container (if running)
+            docker ps -q --filter "name=keyboard-notifier-be" | grep -q . && docker stop keyboard-notifier-be && docker rm keyboard-notifier-be || true
+
+            # Pull the specified image from Docker Hub
+            docker pull ${{ env.DOCKER_IMAGE }}
+
+            # Run the new container
+            docker run -d --name keyboard-notifier-be -p 8080:8080 ${{ env.DOCKER_IMAGE }}
+
+      # Notify deployment success
+      - name: Notify Slack (Deployment Success)
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          webhook_url: ${{ env.SLACK_WEBHOOK_URL }}
+          message: |
+            :white_check_mark: *배포 성공!!*
+            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Branch*: `develop`
+            *Docker Tag*: `${{ github.event.inputs.docker_tag }}`
+            *Status*: `Success`
+          username: "GitHub Actions"
+          icon_emoji: ":tada:"
+
+      # Notify deployment failure
+      - name: Notify Slack (Deployment Failure)
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        with:
+          webhook_url: ${{ env.SLACK_WEBHOOK_URL }}
+          message: |
+            :x: *배포 실패*
+            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Branch*: `develop`
+            *Docker Tag*: `${{ github.event.inputs.docker_tag }}`
+            *Status*: `Failed`
+          username: "GitHub Actions"
+          icon_emoji: ":warning:"
