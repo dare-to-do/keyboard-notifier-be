@@ -39,4 +39,10 @@ public class ProductService {
         ProductEntity productEntity = productRepository.findById(id);
         return ProductResponse.fromEntity(productEntity);
     }
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findSimilarProducts(Long id) {
+        List<ProductEntity> similarProducts = productRepository.findSimilarProducts(id);
+        return similarProducts.stream().map(ProductResponse::fromEntity).toList();
+    }
+
 }

@@ -24,6 +24,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository productJpaRepository;
     private final JPAQueryFactory queryFactory;
+    private final int SIMILAR_PRODUCT_COUNT = 6;
 
     @Override
     public Integer saveAll(List<Product> products) {
@@ -64,4 +65,21 @@ public class ProductRepositoryImpl implements ProductRepository {
     public ProductEntity findById(Long id) {
         return productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
     }
+
+    @Override
+    public List<ProductEntity> findSimilarProducts(Long id) {
+        ProductEntity product = findById(id);
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(productEntity.type.eq(product.getType()));
+        booleanBuilder.and(productEntity.endDate.after(LocalDateTime.now()));
+        booleanBuilder.and(productEntity.id.ne(id));
+
+        return queryFactory.selectFrom(productEntity)
+                .where(booleanBuilder)
+                .orderBy(productEntity.endDate.asc())
+                .limit(SIMILAR_PRODUCT_COUNT)
+                .fetch();
+    }
+
 }
