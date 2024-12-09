@@ -40,3 +40,4 @@ out/
 /*.pem
 
 /src/main/resources/*.yml
+/src/test/resources/*.yml
