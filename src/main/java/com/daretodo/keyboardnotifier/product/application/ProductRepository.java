@@ -21,4 +21,6 @@ public interface ProductRepository {
     ProductEntity findById(Long id);
 
     List<ProductEntity> findSimilarProducts(Long id);
+
+    void updateViewCount(Long id);
 }

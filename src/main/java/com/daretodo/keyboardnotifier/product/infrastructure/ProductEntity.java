@@ -123,4 +123,8 @@ public class ProductEntity extends BaseTimeEntity {
         sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
+
+    public void updateViewCount() {
+        this.viewCount++;
+    }
 }
