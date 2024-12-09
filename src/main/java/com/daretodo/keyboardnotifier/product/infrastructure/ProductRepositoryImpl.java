@@ -10,6 +10,7 @@ import com.daretodo.keyboardnotifier.product.domain.ProductType;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -80,6 +81,11 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .orderBy(productEntity.endDate.asc())
                 .limit(SIMILAR_PRODUCT_COUNT)
                 .fetch();
+    }
+
+    @Override
+    public void updateViewCount(Long id) {
+        findById(id).updateViewCount();
     }
 
 }

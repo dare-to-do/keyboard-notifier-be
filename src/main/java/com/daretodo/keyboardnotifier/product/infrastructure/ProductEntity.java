@@ -2,14 +2,7 @@ package com.daretodo.keyboardnotifier.product.infrastructure;
 
 import com.daretodo.keyboardnotifier.common.BaseTimeEntity;
 import com.daretodo.keyboardnotifier.product.domain.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,6 +52,12 @@ public class ProductEntity extends BaseTimeEntity {
     @Column(name = "status", length = 30)
     private ProductStatus status;
 
+    @Column(name = "view_count")
+    private Long viewCount;
+
+    @Version
+    private Long version;
+
     public static ProductEntity fromDomain(Product product) {
         ProductEntity productEntity = new ProductEntity();
         String productImageUrl = convertFromListToString(product.getImageUrl());
@@ -77,6 +76,8 @@ public class ProductEntity extends BaseTimeEntity {
         productEntity.createdBy = product.getCreatedBy();
         productEntity.updatedAt = product.getUpdatedAt();
         productEntity.updatedBy = product.getUpdatedBy();
+        productEntity.viewCount = 0L;
+        productEntity.version = 0L;
         return productEntity;
     }
 
