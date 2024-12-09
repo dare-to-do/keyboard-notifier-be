@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/products")
@@ -35,6 +37,13 @@ public class ProductController {
     public SokeyResponseBody<ProductResponse> findProduct(@PathVariable Long id) {
         var product = productService.findProduct(id);
         return SokeyResponseBody.success(product);
+    }
+
+    @Operation(summary = "유사 상품 조회")
+    @GetMapping("/{id}/similar")
+    public SokeyResponseBody<List<ProductResponse>> findSimilarProducts(@PathVariable Long id) {
+        var products = productService.findSimilarProducts(id);
+        return SokeyResponseBody.success(products);
     }
 
 }
