@@ -10,6 +10,7 @@ import com.daretodo.keyboardnotifier.product.infrastructure.ProductEntity;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final int MAX_RETRY_COUNT = 5;
 
     @Transactional
     public Integer createProducts(List<Product> products) {
@@ -34,15 +36,42 @@ public class ProductService {
         return productEntities.map(ProductResponse::fromEntity);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ProductResponse findProduct(Long id) {
-        ProductEntity productEntity = productRepository.findById(id);
-        return ProductResponse.fromEntity(productEntity);
+        int retryCount = 0;
+
+        while (retryCount <= MAX_RETRY_COUNT) {
+            try {
+                ProductEntity productEntity = productRepository.findById(id);
+                productRepository.updateViewCount(id);
+                return ProductResponse.fromEntity(productEntity);
+            } catch (OptimisticLockingFailureException e) {
+                retryBackOff(retryCount++);
+            }
+        }
+
+        throw new RuntimeException("Failed to update view count");
     }
+
+
     @Transactional(readOnly = true)
     public List<ProductResponse> findSimilarProducts(Long id) {
         List<ProductEntity> similarProducts = productRepository.findSimilarProducts(id);
         return similarProducts.stream().map(ProductResponse::fromEntity).toList();
+    }
+
+
+    private void retryBackOff(int retryCount) {
+        if (retryCount == MAX_RETRY_COUNT) {
+            throw new RuntimeException("Failed to update view count");
+        }
+
+        long backoffTime = (long) Math.pow(2, retryCount);
+        try {
+            Thread.sleep(backoffTime);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 }
