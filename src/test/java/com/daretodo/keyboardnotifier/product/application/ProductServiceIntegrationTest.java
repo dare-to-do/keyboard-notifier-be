@@ -26,7 +26,9 @@ class ProductServiceIntegrationTest {
     @Autowired
     private ProductRepository productRepository;
 
+
     @Test
+    @Transactional
     void 상품을_생성한다() {
         // given
         FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
@@ -52,6 +54,7 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     void 전체_상품을_조회한다() {
         // given
         FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
@@ -90,6 +93,7 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     void 특정_상품을_조회한다() {
         // given
         FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
