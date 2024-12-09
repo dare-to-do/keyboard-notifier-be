@@ -8,6 +8,7 @@ import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitra
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -114,4 +115,59 @@ class ProductServiceIntegrationTest {
         assertThat(result.price()).isEqualTo(1000L);
     }
 
+    @Test
+    @Transactional
+    void 유사한_상품을_조회한다() {
+        // given
+        FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
+                .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+                .build();
+
+        Product product1 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 1L)
+                .set(javaGetter(Product::getName), "Product A")
+                .set(javaGetter(Product::getProductType), ProductType.KEYBOARD)
+                .set(javaGetter(Product::getUnit), PriceUnit.KRW)
+                .set(javaGetter(Product::getPeriod), Period.of(LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(1)))
+                .sample();
+        Product product2 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 2L)
+                .set(javaGetter(Product::getName), "Product B")
+                .set(javaGetter(Product::getProductType), ProductType.PARTS)
+                .set(javaGetter(Product::getUnit), PriceUnit.KRW)
+                .set(javaGetter(Product::getPeriod), Period.of(LocalDateTime.now().minusDays(2), LocalDateTime.now().plusDays(2)))
+                .sample();
+        Product product3 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 3L)
+                .set(javaGetter(Product::getName), "Product C")
+                .set(javaGetter(Product::getProductType), ProductType.KEYCAP)
+                .set(javaGetter(Product::getUnit), PriceUnit.KRW)
+                .set(javaGetter(Product::getPeriod), Period.of(LocalDateTime.now().minusDays(3), LocalDateTime.now().plusDays(3)))
+                .sample();
+        Product product4 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 4L)
+                .set(javaGetter(Product::getName), "Product D")
+                .set(javaGetter(Product::getProductType), ProductType.KEYBOARD)
+                .set(javaGetter(Product::getUnit), PriceUnit.KRW)
+                .set(javaGetter(Product::getPeriod), Period.of(LocalDateTime.now().minusDays(4), LocalDateTime.now().plusDays(4)))
+                .sample();
+        Product product5 = fixtureMonkey.giveMeBuilder(Product.class)
+                .set(javaGetter(Product::getId), 5L)
+                .set(javaGetter(Product::getName), "Product E")
+                .set(javaGetter(Product::getProductType), ProductType.KEYBOARD)
+                .set(javaGetter(Product::getUnit), PriceUnit.KRW)
+                .set(javaGetter(Product::getPeriod), Period.of(LocalDateTime.now().minusDays(5), LocalDateTime.now().plusDays(5)))
+                .sample();
+
+        List<Product> products = List.of(product1, product2, product3, product4, product5);
+        productRepository.saveAll(products);
+
+        // when
+        var result = sut.findSimilarProducts(1L);
+
+        // then
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).name()).isEqualTo("Product D");
+        assertThat(result.get(1).name()).isEqualTo("Product E");
+    }
 }
