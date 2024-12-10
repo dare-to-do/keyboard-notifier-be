@@ -7,7 +7,6 @@ import com.daretodo.keyboardnotifier.product.domain.ProductType;
 import com.daretodo.keyboardnotifier.product.infrastructure.ProductEntity;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,7 +82,7 @@ public class ProductServiceTest {
 
         // then
         assertThat(result.size()).isEqualTo(2);
-        AssertionsForClassTypes.assertThat(result.get(0).name()).isEqualTo("Product D");
-        AssertionsForClassTypes.assertThat(result.get(1).name()).isEqualTo("Product E");
+        assertThat(result.get(0).name()).isEqualTo("Product D");
+        assertThat(result.get(1).name()).isEqualTo("Product E");
     }
 }
