@@ -5,7 +5,6 @@ import com.daretodo.keyboardnotifier.product.controller.ProductsRequestCondition
 import com.daretodo.keyboardnotifier.product.domain.*;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFOR
 
 @SpringBootTest
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
-@Slf4j
 class ProductServiceIntegrationTest {
 
     @Autowired
@@ -105,7 +103,6 @@ class ProductServiceIntegrationTest {
 
         // when
         var result = sut.findProduct(1L);
-        log.info("result: {}", result);
 
         // then
         assertThat(result.name()).isEqualTo("Product A");
