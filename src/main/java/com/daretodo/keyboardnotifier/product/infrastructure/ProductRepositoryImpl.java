@@ -78,7 +78,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         return queryFactory.selectFrom(productEntity)
                 .where(booleanBuilder)
-                .orderBy(productEntity.endDate.asc())
+                .orderBy(productEntity.endDate.asc(), productEntity.viewCount.desc())
                 .limit(SIMILAR_PRODUCT_COUNT)
                 .fetch();
     }
