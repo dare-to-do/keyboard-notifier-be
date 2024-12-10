@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final int MAX_RETRY_COUNT = 5;
+    private static final int MAX_RETRY_COUNT = 5;
 
     @Transactional
     public Integer createProducts(List<Product> products) {
@@ -47,10 +47,12 @@ public class ProductService {
                 return ProductResponse.fromEntity(productEntity);
             } catch (OptimisticLockingFailureException e) {
                 retryBackOff(retryCount++);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("상품을 찾을 수 없습니다.");
             }
         }
 
-        throw new RuntimeException("Failed to update view count");
+        throw new RuntimeException("조회수 업데이트에 실패했습니다.");
     }
 
 
@@ -63,7 +65,7 @@ public class ProductService {
 
     private void retryBackOff(int retryCount) {
         if (retryCount == MAX_RETRY_COUNT) {
-            throw new RuntimeException("Failed to update view count");
+            throw new RuntimeException("조회수 업데이트에 실패했습니다.");
         }
 
         long backoffTime = (long) Math.pow(2, retryCount);
