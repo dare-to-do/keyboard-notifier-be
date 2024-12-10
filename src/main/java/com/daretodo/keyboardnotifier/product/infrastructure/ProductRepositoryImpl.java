@@ -25,7 +25,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository productJpaRepository;
     private final JPAQueryFactory queryFactory;
-    private final int SIMILAR_PRODUCT_COUNT = 6;
+    private static final int SIMILAR_PRODUCT_COUNT = 6;
 
     @Override
     public Integer saveAll(List<Product> products) {

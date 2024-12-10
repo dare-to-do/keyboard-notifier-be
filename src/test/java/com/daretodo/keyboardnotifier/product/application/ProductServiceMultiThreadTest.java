@@ -29,6 +29,9 @@ public class ProductServiceMultiThreadTest {
     @Autowired
     private ProductRepository productRepository;
 
+    private static final int MAX_RETRY_COUNT = 3;
+
+
     @Test
     void 상품_조회_실패시_재시도한다() throws InterruptedException {
         // given
@@ -49,7 +52,6 @@ public class ProductServiceMultiThreadTest {
         int threadCount = 10;
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
-        int MAX_RETRY_COUNT = 3;
         AtomicInteger tryCount = new AtomicInteger();
 
         // when
