@@ -10,6 +10,7 @@ import com.daretodo.keyboardnotifier.product.domain.ProductType;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository productJpaRepository;
     private final JPAQueryFactory queryFactory;
+    private static final int SIMILAR_PRODUCT_COUNT = 6;
 
     @Override
     public Integer saveAll(List<Product> products) {
@@ -64,4 +66,26 @@ public class ProductRepositoryImpl implements ProductRepository {
     public ProductEntity findById(Long id) {
         return productJpaRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
     }
+
+    @Override
+    public List<ProductEntity> findSimilarProducts(Long id) {
+        ProductEntity product = findById(id);
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(productEntity.type.eq(product.getType()));
+        booleanBuilder.and(productEntity.endDate.after(LocalDateTime.now()));
+        booleanBuilder.and(productEntity.id.ne(id));
+
+        return queryFactory.selectFrom(productEntity)
+                .where(booleanBuilder)
+                .orderBy(productEntity.endDate.asc(), productEntity.viewCount.desc())
+                .limit(SIMILAR_PRODUCT_COUNT)
+                .fetch();
+    }
+
+    @Override
+    public void updateViewCount(Long id) {
+        findById(id).updateViewCount();
+    }
+
 }

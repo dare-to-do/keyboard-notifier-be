@@ -5,12 +5,13 @@ import com.daretodo.keyboardnotifier.product.domain.ProductType;
 import com.daretodo.keyboardnotifier.product.infrastructure.ProductEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ProductResponse(
         String name,
         Long price,
         String unit,
-        String[] imageUrl,
+        List<String> imageUrl,
         String productUrl,
         String description,
         LocalDateTime startDate,
@@ -20,7 +21,7 @@ public record ProductResponse(
 ) {
 
     public static ProductResponse fromEntity(ProductEntity productEntity) {
-        String[] imageUrls = productEntity.getImageUrl().split(",");
+        List<String> imageUrls = List.of(productEntity.getImageUrl().split(","));
         return new ProductResponse(
                 productEntity.getName(),
                 productEntity.getPrice(),

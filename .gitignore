@@ -39,4 +39,4 @@ out/
 /docker
 /*.pem
 
-/src/main/resources/*.yml
+/src/*/resources/*.yml

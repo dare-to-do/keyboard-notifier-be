@@ -19,4 +19,8 @@ public interface ProductRepository {
                                         Pageable pageable, ProductSortBy sortBy);
 
     ProductEntity findById(Long id);
+
+    List<ProductEntity> findSimilarProducts(Long id);
+
+    void updateViewCount(Long id);
 }
