@@ -20,6 +20,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @SpringBootTest
+@Transactional
 @DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class ProductServiceIntegrationTest {
 
@@ -39,7 +40,6 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional
     void 상품을_생성한다() {
         // given
         Product product1 = productFixtureBuilder
@@ -89,11 +89,9 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional
     void 특정_상품을_조회한다() {
         // given
         Product product = productFixtureBuilder
-                .id(1L)
                 .name("Product A")
                 .price(1000L)
                 .build();
