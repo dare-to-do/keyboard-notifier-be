@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record ProductResponse(
+        Long id,
         String name,
         Long price,
         String unit,
@@ -23,6 +24,7 @@ public record ProductResponse(
     public static ProductResponse fromEntity(ProductEntity productEntity) {
         List<String> imageUrls = List.of(productEntity.getImageUrl().split(","));
         return new ProductResponse(
+                productEntity.getId(),
                 productEntity.getName(),
                 productEntity.getPrice(),
                 productEntity.getPriceUnit().getKoreanName(),
