@@ -1,8 +1,8 @@
 package com.daretodo.keyboardnotifier.product.application.dto;
 
+import com.daretodo.keyboardnotifier.product.domain.Product;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
 import com.daretodo.keyboardnotifier.product.domain.ProductType;
-import com.daretodo.keyboardnotifier.product.infrastructure.ProductEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,20 +21,19 @@ public record ProductResponse(
         ProductType productType
 ) {
 
-    public static ProductResponse fromEntity(ProductEntity productEntity) {
-        List<String> imageUrls = List.of(productEntity.getImageUrl().split(","));
+    public static ProductResponse fromDomain(Product product) {
         return new ProductResponse(
-                productEntity.getId(),
-                productEntity.getName(),
-                productEntity.getPrice(),
-                productEntity.getPriceUnit().getKoreanName(),
-                imageUrls,
-                productEntity.getProductUrl(),
-                productEntity.getDescription(),
-                productEntity.getStartDate(),
-                productEntity.getEndDate(),
-                productEntity.getStatus(),
-                productEntity.getType()
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getPriceUnit().getKoreanName(),
+                product.getImageUrl(),
+                product.getProductUrl(),
+                product.getDescription(),
+                product.getPeriod().getStartDate(),
+                product.getPeriod().getEndDate(),
+                product.getStatus(),
+                product.getType()
         );
     }
 }
