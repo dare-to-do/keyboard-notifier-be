@@ -3,18 +3,16 @@ package com.daretodo.keyboardnotifier.product.application;
 import com.daretodo.keyboardnotifier.product.application.dto.ProductResponse;
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
 import com.daretodo.keyboardnotifier.product.domain.Product;
+import com.daretodo.keyboardnotifier.product.domain.ProductRepository;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
 import com.daretodo.keyboardnotifier.product.domain.ProductType;
-import com.daretodo.keyboardnotifier.product.infrastructure.ProductEntity;
-
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,10 +41,8 @@ public class ProductService {
     }
 
     public List<ProductResponse> findSimilarProducts(Long id) {
-        List<ProductEntity> similarProducts = productRepository.findSimilarProducts(id);
-        return similarProducts.stream().map(ProductResponse::fromEntity).toList();
-    }
-
+        List<Product> similarProducts = productRepository.findSimilarProducts(id);
+        return productMapper.toProductResponseList(similarProducts);
     }
 
 }
