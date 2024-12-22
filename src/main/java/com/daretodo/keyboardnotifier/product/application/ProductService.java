@@ -22,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private static final int MAX_RETRY_COUNT = 5;
+    private final ProductEventService productEventService;
+    private final ProductMapper productMapper;
 
     @Transactional
     public Integer createProducts(List<Product> products) {
@@ -31,9 +32,8 @@ public class ProductService {
 
     public Page<ProductResponse> findAllProducts(ProductStatus productStatus, ProductType productType,
                                                  Pageable pageable, ProductSortBy sortBy) {
-        Page<ProductEntity> productEntities = productRepository
-                .findAllProducts(productStatus, productType, pageable, sortBy);
-        return productEntities.map(ProductResponse::fromEntity);
+        Page<Product> products = productRepository.findAllProducts(productStatus, productType, pageable, sortBy);
+        return productMapper.toProductResponsePage(products);
     }
 
     public ProductResponse findProduct(Long id) {
