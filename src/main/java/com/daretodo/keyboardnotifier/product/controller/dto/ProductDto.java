@@ -1,12 +1,11 @@
-package com.daretodo.keyboardnotifier.product.controller;
+package com.daretodo.keyboardnotifier.product.controller.dto;
 
 import com.daretodo.keyboardnotifier.product.domain.*;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-
-import org.springframework.util.Assert;
 
 public record ProductDto(
         String name,
@@ -45,6 +44,7 @@ public record ProductDto(
                 description,
                 Period.of(startDate, endDate),
                 getProductStatus(startDate, endDate),
+                null,
                 null,
                 null,
                 null,
