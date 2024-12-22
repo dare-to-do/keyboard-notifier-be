@@ -52,8 +52,9 @@ public class ProductEntity extends BaseTimeEntity {
     @Column(name = "status", length = 30)
     private ProductStatus status;
 
+    @Embedded
     @Column(name = "view_count")
-    private Long viewCount;
+    private ViewCount viewCount;
 
     @Version
     private Long version;
