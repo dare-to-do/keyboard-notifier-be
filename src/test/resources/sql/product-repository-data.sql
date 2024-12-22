@@ -1,8 +1,8 @@
 INSERT INTO product (id, created_at, created_by, updated_at, updated_by, name, price, price_unit, image_url,
-                     product_url, type, description, start_date, end_date, status)
+                     product_url, type, description, start_date, end_date, status, view_count)
 VALUES (1, NOW(), 'admin', NOW(), 'admin', 'Product A', 1000, 'KRW', 'http://example.com/imageA.jpg',
         'http://example.com/productA', 'KEYBOARD',
-        'Description for Product A', '2024-08-01', '2024-08-31', 'IN_PROGRESS');
+        'Description for Product A', '2024-08-01', '2024-08-31', 'IN_PROGRESS', 0);
 INSERT INTO product (id, created_at, created_by, updated_at, updated_by, name, price, price_unit, image_url,
                      product_url, type, description, start_date, end_date, status)
 VALUES (2, NOW() + 1, 'admin', NOW(), 'admin', 'Product B', 2000, 'USD', 'http://example.com/imageB.jpg',

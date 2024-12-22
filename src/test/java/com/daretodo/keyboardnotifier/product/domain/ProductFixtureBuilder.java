@@ -101,10 +101,10 @@ public class ProductFixtureBuilder {
             case "id" -> javaGetter(Product::getId);
             case "name" -> javaGetter(Product::getName);
             case "price" -> javaGetter(Product::getPrice);
-            case "unit" -> javaGetter(Product::getUnit);
+            case "unit" -> javaGetter(Product::getPriceUnit);
             case "imageUrl" -> javaGetter(Product::getImageUrl);
             case "productUrl" -> javaGetter(Product::getProductUrl);
-            case "productType" -> javaGetter(Product::getProductType);
+            case "productType" -> javaGetter(Product::getType);
             case "description" -> javaGetter(Product::getDescription);
             case "period" -> javaGetter(Product::getPeriod);
             case "status" -> javaGetter(Product::getStatus);
