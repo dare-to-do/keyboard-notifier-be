@@ -37,37 +37,16 @@ public class ProductService {
     }
 
     public ProductResponse findProduct(Long id) {
-        int retryCount = 0;
-
-        while (retryCount <= MAX_RETRY_COUNT) {
-            try {
-                ProductEntity productEntity = productRepository.findById(id);
-                productRepository.updateViewCount(id);
-                return ProductResponse.fromEntity(productEntity);
-            } catch (OptimisticLockingFailureException e) {
-                retryBackOff(retryCount++);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("상품을 찾을 수 없습니다.");
-            }
-        }
+        Product product = productRepository.findById(id);
+        productEventService.publishReadEvent(product);
+        return productMapper.toProductResponse(product);
+    }
 
     public List<ProductResponse> findSimilarProducts(Long id) {
         List<ProductEntity> similarProducts = productRepository.findSimilarProducts(id);
         return similarProducts.stream().map(ProductResponse::fromEntity).toList();
     }
 
-
-    private void retryBackOff(int retryCount) {
-        if (retryCount == MAX_RETRY_COUNT) {
-            throw new RuntimeException("조회수 업데이트에 실패했습니다.");
-        }
-
-        long backoffTime = (long) Math.pow(2, retryCount);
-        try {
-            Thread.sleep(backoffTime);
-        } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-        }
     }
 
 }
