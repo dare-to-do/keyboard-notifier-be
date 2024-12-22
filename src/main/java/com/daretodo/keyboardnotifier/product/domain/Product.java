@@ -43,5 +43,6 @@ public class Product {
         this.createdBy = createdBy;
         this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
+        this.viewCount = viewCount;
     }
 }
