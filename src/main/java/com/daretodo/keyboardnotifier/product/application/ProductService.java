@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -28,7 +29,6 @@ public class ProductService {
         return productRepository.saveAll(products);
     }
 
-    @Transactional(readOnly = true)
     public Page<ProductResponse> findAllProducts(ProductStatus productStatus, ProductType productType,
                                                  Pageable pageable, ProductSortBy sortBy) {
         Page<ProductEntity> productEntities = productRepository
@@ -36,7 +36,6 @@ public class ProductService {
         return productEntities.map(ProductResponse::fromEntity);
     }
 
-    @Transactional
     public ProductResponse findProduct(Long id) {
         int retryCount = 0;
 
@@ -52,11 +51,6 @@ public class ProductService {
             }
         }
 
-        throw new RuntimeException("조회수 업데이트에 실패했습니다.");
-    }
-
-
-    @Transactional(readOnly = true)
     public List<ProductResponse> findSimilarProducts(Long id) {
         List<ProductEntity> similarProducts = productRepository.findSimilarProducts(id);
         return similarProducts.stream().map(ProductResponse::fromEntity).toList();
