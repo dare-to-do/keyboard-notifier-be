@@ -1,9 +1,8 @@
 package com.daretodo.keyboardnotifier.product.infrastructure;
 
-import static org.assertj.core.api.Assertions.*;
-
 import com.daretodo.keyboardnotifier.config.QuerydslConfig;
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
+import com.daretodo.keyboardnotifier.product.domain.Product;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
 import com.daretodo.keyboardnotifier.product.domain.ProductType;
 import org.junit.jupiter.api.Nested;
@@ -15,6 +14,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 @DataJpaTest
 @Sql("/sql/product-repository-data.sql")
 @Import({ProductRepositoryImpl.class, QuerydslConfig.class})
@@ -22,6 +24,42 @@ class ProductRepositoryImplTest {
 
     @Autowired
     private ProductRepositoryImpl sut;
+
+    @Test
+    void 단일상품을_조회한다() {
+        // given
+        Long id = 1L;
+
+        // when
+        Product product = sut.findById(id);
+
+        // then
+        assertThat(product.getId()).isEqualTo(id);
+    }
+
+    @Test
+    void 상품이_없을때_예외처리한다() {
+        // given
+        Long id = 1000L;
+
+        // when & then
+        assertThatThrownBy(() -> sut.findById(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("상품을 찾을 수 없습니다.");
+    }
+
+    @Test
+    void 상품조회수를_증가한다() {
+        // given
+        Long id = 1L;
+        Product product = sut.findById(id);
+
+        // when
+        sut.increaseViewCount(product);
+
+        // then
+        assertThat(product.getViewCount().getViewCount()).isEqualTo(1);
+    }
 
     @Nested
     class filter {
@@ -32,12 +70,12 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(null, null, pageRequest, null);
+            Page<Product> products = sut.findAllProducts(null, null, pageRequest, null);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(5);
             assertThat(products.getContent()).extracting("name")
-                .containsExactlyInAnyOrder("Product A", "Product B", "Product C", "Product D", "Product E");
+                    .containsExactlyInAnyOrder("Product A", "Product B", "Product C", "Product D", "Product E");
         }
 
         @Test
@@ -46,7 +84,7 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(ProductStatus.IN_PROGRESS, null, pageRequest, null);
+            Page<Product> products = sut.findAllProducts(ProductStatus.IN_PROGRESS, null, pageRequest, null);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(2);
@@ -59,7 +97,7 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(null, ProductType.KEYBOARD, pageRequest, null);
+            Page<Product> products = sut.findAllProducts(null, ProductType.KEYBOARD, pageRequest, null);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(1);
@@ -72,7 +110,7 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(ProductStatus.IN_PROGRESS, ProductType.KEYBOARD, pageRequest, null);
+            Page<Product> products = sut.findAllProducts(ProductStatus.IN_PROGRESS, ProductType.KEYBOARD, pageRequest, null);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(1);
@@ -89,12 +127,12 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.NEWEST);
+            Page<Product> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.NEWEST);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(5);
             assertThat(products.getContent()).extracting("name")
-                .containsExactly("Product E", "Product D", "Product C", "Product B", "Product A");
+                    .containsExactly("Product E", "Product D", "Product C", "Product B", "Product A");
         }
 
         @Test
@@ -103,12 +141,12 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.OLDEST);
+            Page<Product> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.OLDEST);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(5);
             assertThat(products.getContent()).extracting("name")
-                .containsExactly("Product A", "Product B", "Product C", "Product D", "Product E");
+                    .containsExactly("Product A", "Product B", "Product C", "Product D", "Product E");
         }
 
         @Test
@@ -117,12 +155,12 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.HIGH_PRICE);
+            Page<Product> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.HIGH_PRICE);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(5);
             assertThat(products.getContent()).extracting("price")
-                .containsExactly(3000L, 2500L, 2000L, 1500L, 1000L);
+                    .containsExactly(3000L, 2500L, 2000L, 1500L, 1000L);
         }
 
         @Test
@@ -131,12 +169,12 @@ class ProductRepositoryImplTest {
             PageRequest pageRequest = PageRequest.of(0, 10);
 
             // when
-            Page<ProductEntity> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.LOW_PRICE);
+            Page<Product> products = sut.findAllProducts(null, null, pageRequest, ProductSortBy.LOW_PRICE);
 
             // then
             assertThat(products.getTotalElements()).isEqualTo(5);
             assertThat(products.getContent()).extracting("price")
-                .containsExactly(1000L, 1500L, 2000L, 2500L, 3000L);
+                    .containsExactly(1000L, 1500L, 2000L, 2500L, 3000L);
         }
     }
 }

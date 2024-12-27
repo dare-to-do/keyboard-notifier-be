@@ -3,13 +3,14 @@ package com.daretodo.keyboardnotifier.product.application;
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
 import com.daretodo.keyboardnotifier.product.controller.ProductsRequestCondition;
 import com.daretodo.keyboardnotifier.product.domain.*;
+import com.daretodo.keyboardnotifier.product.infrastructure.ProductEntity;
+import com.daretodo.keyboardnotifier.product.infrastructure.ProductJpaRepository;
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import com.navercorp.fixturemonkey.api.introspector.ConstructorPropertiesArbitraryIntrospector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -17,25 +18,22 @@ import java.util.List;
 
 import static com.navercorp.fixturemonkey.api.expression.JavaGetterMethodPropertySelector.javaGetter;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
 
 @SpringBootTest
 @Transactional
-@DirtiesContext(classMode = BEFORE_EACH_TEST_METHOD)
 class ProductServiceIntegrationTest {
 
     @Autowired
     private ProductService sut;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductJpaRepository productJpaRepository;
 
-    private ProductFixtureFactory productFixtureFactory;
     private ProductFixtureBuilder productFixtureBuilder;
 
     @BeforeEach
     void setUp() {
-        productFixtureFactory = new ProductFixtureFactory();
+        ProductFixtureFactory productFixtureFactory = new ProductFixtureFactory();
         productFixtureBuilder = productFixtureFactory.create();
     }
 
@@ -76,8 +74,8 @@ class ProductServiceIntegrationTest {
                 .name("Product B")
                 .build();
 
-        List<Product> products = List.of(product1, product2);
-        productRepository.saveAll(products);
+        List<ProductEntity> products = List.of(ProductEntity.fromDomain(product1), ProductEntity.fromDomain(product2));
+        productJpaRepository.saveAll(products);
 
         // when
         var result = sut.findAllProducts(null, null, condition.getPageable(), ProductSortBy.NEWEST);
@@ -92,15 +90,16 @@ class ProductServiceIntegrationTest {
     void 특정_상품을_조회한다() {
         // given
         Product product = productFixtureBuilder
+                .id(1L)
                 .name("Product A")
                 .price(1000L)
                 .build();
 
-        List<Product> products = List.of(product);
-        productRepository.saveAll(products);
+        ProductEntity productEntity = ProductEntity.fromDomain(product);
+        ProductEntity saved = productJpaRepository.save(productEntity);
 
         // when
-        var result = sut.findProduct(1L);
+        var result = sut.findProduct(saved.getId());
 
         // then
         assertThat(result.name()).isEqualTo("Product A");
@@ -111,11 +110,12 @@ class ProductServiceIntegrationTest {
     @Transactional(readOnly = true)
     void 유사한_상품을_조회한다() {
         // given
-        List<Product> products = getProductsWithNameTypePeriod();
-        productRepository.saveAll(products);
+        List<ProductEntity> products = getProductEntitiesWithNameTypePeriod();
+
+        List<ProductEntity> savedEntities = productJpaRepository.saveAll(products);
 
         // when
-        var result = sut.findSimilarProducts(1L);
+        var result = sut.findSimilarProducts(savedEntities.get(0).getId());
 
         // then
         assertThat(result.size()).isEqualTo(2);
@@ -123,35 +123,45 @@ class ProductServiceIntegrationTest {
         assertThat(result.get(1).name()).isEqualTo("Product E");
     }
 
-    private List<Product> getProductsWithNameTypePeriod() {
+    private List<ProductEntity> getProductEntitiesWithNameTypePeriod() {
         Product product1 = productFixtureBuilder
+                .id(1L)
                 .name("Product A")
                 .productType(ProductType.KEYBOARD)
                 .period(createPeriod(1))
                 .build();
         Product product2 = productFixtureBuilder
+                .id(2L)
                 .name("Product B")
                 .productType(ProductType.PARTS)
                 .period(createPeriod(2))
                 .build();
         Product product3 = productFixtureBuilder
+                .id(3L)
                 .name("Product C")
                 .productType(ProductType.KEYCAP)
                 .period(createPeriod(3))
                 .build();
         Product product4 = productFixtureBuilder
+                .id(4L)
                 .name("Product D")
                 .productType(ProductType.KEYBOARD)
                 .period(createPeriod(4))
                 .build();
         Product product5 = productFixtureBuilder
+                .id(5L)
                 .name("Product E")
                 .productType(ProductType.KEYBOARD)
                 .period(createPeriod(5))
                 .build();
 
-        List<Product> products = List.of(product1, product2, product3, product4, product5);
-        return products;
+        return List.of(
+                ProductEntity.fromDomain(product1),
+                ProductEntity.fromDomain(product2),
+                ProductEntity.fromDomain(product3),
+                ProductEntity.fromDomain(product4),
+                ProductEntity.fromDomain(product5)
+        );
     }
 
     private Period createPeriod(int index) {

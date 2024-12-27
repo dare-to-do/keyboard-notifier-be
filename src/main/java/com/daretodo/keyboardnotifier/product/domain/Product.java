@@ -1,10 +1,10 @@
 package com.daretodo.keyboardnotifier.product.domain;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class Product {
@@ -12,10 +12,10 @@ public class Product {
     private Long id;
     private String name;
     private Long price;
-    private PriceUnit unit;
+    private PriceUnit priceUnit;
     private List<String> imageUrl;
     private String productUrl;
-    private ProductType productType;
+    private ProductType type;
     private String description;
     private Period period;
     private ProductStatus status;
@@ -23,18 +23,19 @@ public class Product {
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
+    private ViewCount viewCount;
 
     @Builder
-    public Product(Long id, String name, Long price, PriceUnit unit, List<String> imageUrl, String productUrl,
-                   ProductType productType, String description, Period period, ProductStatus status,
-                   LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
+    public Product(Long id, String name, Long price, PriceUnit priceUnit, List<String> imageUrl, String productUrl,
+                   ProductType type, String description, Period period, ProductStatus status, LocalDateTime createdAt,
+                   String createdBy, LocalDateTime updatedAt, String updatedBy, ViewCount viewCount) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.unit = unit;
+        this.priceUnit = priceUnit;
         this.imageUrl = imageUrl;
         this.productUrl = productUrl;
-        this.productType = productType;
+        this.type = type;
         this.description = description;
         this.period = period;
         this.status = status;
@@ -42,5 +43,6 @@ public class Product {
         this.createdBy = createdBy;
         this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
+        this.viewCount = viewCount;
     }
 }

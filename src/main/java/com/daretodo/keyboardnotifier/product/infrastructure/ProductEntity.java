@@ -3,12 +3,10 @@ package com.daretodo.keyboardnotifier.product.infrastructure;
 import com.daretodo.keyboardnotifier.common.BaseTimeEntity;
 import com.daretodo.keyboardnotifier.product.domain.*;
 import jakarta.persistence.*;
+import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Getter;
 
 @Entity
 @Table(name = "product")
@@ -42,18 +40,20 @@ public class ProductEntity extends BaseTimeEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
-
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "startDate", column = @Column(name = "start_date")),
+            @AttributeOverride(name = "endDate", column = @Column(name = "end_date"))
+    })
+    private Period period;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 30)
     private ProductStatus status;
 
+    @Embedded
     @Column(name = "view_count")
-    private Long viewCount;
+    private ViewCount viewCount;
 
     @Version
     private Long version;
@@ -62,22 +62,19 @@ public class ProductEntity extends BaseTimeEntity {
         ProductEntity productEntity = new ProductEntity();
         String productImageUrl = convertFromListToString(product.getImageUrl());
 
-        productEntity.id = product.getId();
         productEntity.name = product.getName();
         productEntity.price = product.getPrice();
-        productEntity.priceUnit = product.getUnit();
+        productEntity.priceUnit = product.getPriceUnit();
         productEntity.imageUrl = productImageUrl;
-        productEntity.type = product.getProductType();
+        productEntity.type = product.getType();
         productEntity.description = product.getDescription();
-        productEntity.startDate = product.getPeriod().startDate();
-        productEntity.endDate = product.getPeriod().endDate();
+        productEntity.period = product.getPeriod();
         productEntity.status = product.getStatus();
         productEntity.createdAt = product.getCreatedAt();
         productEntity.createdBy = product.getCreatedBy();
         productEntity.updatedAt = product.getUpdatedAt();
         productEntity.updatedBy = product.getUpdatedBy();
-        productEntity.viewCount = 0L;
-        productEntity.version = 0L;
+        productEntity.viewCount = ViewCount.from(0L);
         return productEntity;
     }
 
@@ -87,29 +84,6 @@ public class ProductEntity extends BaseTimeEntity {
             productEntities.add(fromDomain(product));
         }
         return productEntities;
-    }
-
-    public Product toProduct() {
-        List<String> imageUrls = new ArrayList<>();
-        for (String imageUrl : imageUrl.split(",")) {
-            imageUrls.add(imageUrl);
-        }
-        return Product.builder()
-                .id(id)
-                .name(name)
-                .price(price)
-                .unit(priceUnit)
-                .imageUrl(imageUrls)
-                .productUrl(productUrl)
-                .productType(type)
-                .description(description)
-                .period(Period.of(startDate, endDate))
-                .status(status)
-                .createdAt(createdAt)
-                .createdBy(createdBy)
-                .updatedAt(updatedAt)
-                .updatedBy(updatedBy)
-                .build();
     }
 
     private static String convertFromListToString(List<String> imageUrls) {
@@ -124,7 +98,31 @@ public class ProductEntity extends BaseTimeEntity {
         return sb.toString();
     }
 
-    public void updateViewCount() {
-        this.viewCount++;
+    public Product toProduct() {
+        List<String> imageUrls = new ArrayList<>();
+        for (String imageUrl : imageUrl.split(",")) {
+            imageUrls.add(imageUrl);
+        }
+        return Product.builder()
+                .id(id)
+                .name(name)
+                .price(price)
+                .priceUnit(priceUnit)
+                .imageUrl(imageUrls)
+                .productUrl(productUrl)
+                .type(type)
+                .description(description)
+                .period(period)
+                .status(status)
+                .createdAt(createdAt)
+                .createdBy(createdBy)
+                .updatedAt(updatedAt)
+                .updatedBy(updatedBy)
+                .viewCount(viewCount)
+                .build();
+    }
+
+    public void increaseViewCount() {
+        viewCount.increaseViewCount();
     }
 }
