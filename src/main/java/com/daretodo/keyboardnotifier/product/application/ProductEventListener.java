@@ -1,7 +1,6 @@
 package com.daretodo.keyboardnotifier.product.application;
 
 import com.daretodo.keyboardnotifier.product.domain.ProductEvent;
-import com.daretodo.keyboardnotifier.product.domain.ProductEvent.EventType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,10 @@ public class ProductEventListener {
     }
 
     private void handleProductReadEvent(ProductEvent event) {
-        if (!IsReadEvent(event)) return;
+        if (!event.isReadEvent()) {
+            return;
+        }
         viewCountService.increaseViewCount(event.getProduct());
     }
 
-    private boolean IsReadEvent(ProductEvent event) {
-        return event.getEventType() == EventType.READ;
-    }
 }

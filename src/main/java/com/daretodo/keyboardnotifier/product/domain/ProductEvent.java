@@ -16,6 +16,10 @@ public class ProductEvent {
         return new ProductEvent(product, type);
     }
 
+    public boolean isReadEvent() {
+        return eventType == EventType.READ;
+    }
+
     public enum EventType {
         READ,
     }
