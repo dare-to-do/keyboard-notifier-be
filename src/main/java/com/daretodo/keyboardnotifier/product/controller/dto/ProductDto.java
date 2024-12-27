@@ -33,23 +33,18 @@ public record ProductDto(
         Assert.hasText(productUrl, "상품 URL은 필수입니다.");
         Assert.notNull(productType, "상품 종류는 필수입니다.");
 
-        return new Product(
-                null,
-                name,
-                price,
-                PriceUnit.from(unit),
-                imageUrls,
-                productUrl,
-                ProductType.from(productType),
-                description,
-                Period.of(startDate, endDate),
-                getProductStatus(startDate, endDate),
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+        return Product.builder()
+                .id(null)
+                .name(name)
+                .price(price)
+                .priceUnit(PriceUnit.from(unit))
+                .imageUrl(imageUrls)
+                .productUrl(productUrl)
+                .type(ProductType.from(productType))
+                .description(description)
+                .period(Period.of(startDate, endDate))
+                .status(getProductStatus(startDate, endDate))
+                .build();
     }
 
     private ProductStatus getProductStatus(LocalDateTime startDate, LocalDateTime endDate) {
