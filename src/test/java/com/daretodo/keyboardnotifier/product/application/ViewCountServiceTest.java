@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static com.daretodo.keyboardnotifier.product.application.ViewCountService.ERROR_MESSAGE;
+import static com.daretodo.keyboardnotifier.product.application.ViewCountService.VIEW_COUNT_UPDATE_ERROR_MESSAGE;
 import static com.daretodo.keyboardnotifier.product.application.ViewCountService.MAX_RETRY_COUNT;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -40,7 +40,7 @@ public class ViewCountServiceTest {
         viewCountService.increaseViewCount(product);
 
         // then
-        verify(retryPolicy, times(1)).retryWithOptimisticLock(any(Runnable.class), eq(MAX_RETRY_COUNT), eq(ERROR_MESSAGE));
+        verify(retryPolicy, times(1)).retryWithOptimisticLock(any(Runnable.class), eq(MAX_RETRY_COUNT), eq(VIEW_COUNT_UPDATE_ERROR_MESSAGE));
     }
 
     @Test
@@ -49,6 +49,6 @@ public class ViewCountServiceTest {
         doThrow(new RuntimeException()).when(retryPolicy).retryWithOptimisticLock(any(Runnable.class), anyInt(), anyString());
 
         // when & then
-        assertThrows(RuntimeException.class, () -> viewCountService.increaseViewCount(product), ERROR_MESSAGE);
+        assertThrows(RuntimeException.class, () -> viewCountService.increaseViewCount(product), VIEW_COUNT_UPDATE_ERROR_MESSAGE);
     }
 }

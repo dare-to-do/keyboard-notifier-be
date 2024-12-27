@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ViewCountService {
     static final int MAX_RETRY_COUNT = 5;
-    static final String ERROR_MESSAGE = "조회수 업데이트에 실패했습니다.";
+    static final String VIEW_COUNT_UPDATE_ERROR_MESSAGE = "조회수 업데이트에 실패했습니다.";
 
     private final ProductRepository productRepository;
 
@@ -21,6 +21,6 @@ public class ViewCountService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void increaseViewCount(Product product) {
         retryPolicy.retryWithOptimisticLock(() -> productRepository.increaseViewCount(product), MAX_RETRY_COUNT,
-                ERROR_MESSAGE);
+                VIEW_COUNT_UPDATE_ERROR_MESSAGE);
     }
 }
