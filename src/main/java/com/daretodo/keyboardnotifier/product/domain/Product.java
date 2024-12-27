@@ -45,4 +45,8 @@ public class Product {
         this.updatedBy = updatedBy;
         this.viewCount = viewCount;
     }
+
+    public void delete() {
+        this.status = ProductStatus.DELETED;
+    }
 }

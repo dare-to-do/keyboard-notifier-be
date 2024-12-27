@@ -46,4 +46,10 @@ public class ProductController {
         return SokeyResponseBody.success(products);
     }
 
+    @Operation(summary = "상품 삭제")
+    @DeleteMapping("/{id}")
+    public SokeyResponseBody<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return SokeyResponseBody.success();
+    }
 }

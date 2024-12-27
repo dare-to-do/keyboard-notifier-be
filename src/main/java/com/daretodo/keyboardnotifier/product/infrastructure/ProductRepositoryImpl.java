@@ -92,6 +92,11 @@ public class ProductRepositoryImpl implements ProductRepository {
         productEntity.increaseViewCount();
     }
 
+    @Override
+    public void save(Product product) {
+        productJpaRepository.save(ProductEntity.fromDomain(product));
+    }
+
     private ProductEntity findProductEntityById(Long id) {
         return productJpaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
