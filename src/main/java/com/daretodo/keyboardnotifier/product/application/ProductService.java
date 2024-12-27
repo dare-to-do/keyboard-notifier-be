@@ -45,4 +45,10 @@ public class ProductService {
         return productMapper.toProductResponseList(similarProducts);
     }
 
+    @Transactional
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId);
+        product.delete();
+        productRepository.save(product);
+    }
 }
