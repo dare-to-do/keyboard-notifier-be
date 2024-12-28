@@ -30,8 +30,8 @@ public record ProductResponse(
                 product.getImageUrl(),
                 product.getProductUrl(),
                 product.getDescription(),
-                product.getPeriod().getStartDate(),
-                product.getPeriod().getEndDate(),
+                product.getPeriod().isEmpty() ? null : product.getPeriod().get().getStartDate(),
+                product.getPeriod().isEmpty() ? null : product.getPeriod().get().getEndDate(),
                 product.getStatus(),
                 product.getType()
         );

@@ -68,7 +68,7 @@ public class ProductEntity extends BaseTimeEntity {
         productEntity.imageUrl = productImageUrl;
         productEntity.type = product.getType();
         productEntity.description = product.getDescription();
-        productEntity.period = product.getPeriod();
+        productEntity.period = product.getPeriod().isEmpty() ? null : product.getPeriod().get();
         productEntity.status = product.getStatus();
         productEntity.createdAt = product.getCreatedAt();
         productEntity.createdBy = product.getCreatedBy();

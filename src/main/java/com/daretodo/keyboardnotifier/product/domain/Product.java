@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Getter
 public class Product {
@@ -17,7 +18,7 @@ public class Product {
     private String productUrl;
     private ProductType type;
     private String description;
-    private Period period;
+    private Optional<Period> period;
     private ProductStatus status;
     private LocalDateTime createdAt;
     private String createdBy;
@@ -37,7 +38,7 @@ public class Product {
         this.productUrl = productUrl;
         this.type = type;
         this.description = description;
-        this.period = period;
+        this.period = Optional.ofNullable(period);
         this.status = status;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
