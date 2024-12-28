@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -56,7 +57,6 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional(readOnly = true)
     void 전체_상품을_조회한다() {
         // given
         ProductsRequestCondition condition = FixtureMonkey.builder()
@@ -87,16 +87,18 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    void 특정_상품을_조회한다() {
+    void 단일_상품을_조회한다() {
         // given
         Product product = productFixtureBuilder
-                .id(1L)
                 .name("Product A")
                 .price(1000L)
                 .build();
 
         ProductEntity productEntity = ProductEntity.fromDomain(product);
         ProductEntity saved = productJpaRepository.save(productEntity);
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
+        TestTransaction.start();
 
         // when
         var result = sut.findProduct(saved.getId());
@@ -107,7 +109,6 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional(readOnly = true)
     void 유사한_상품을_조회한다() {
         // given
         List<ProductEntity> products = getProductEntitiesWithNameTypePeriod();
