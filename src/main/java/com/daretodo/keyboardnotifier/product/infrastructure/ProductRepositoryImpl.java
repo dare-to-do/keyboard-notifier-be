@@ -64,8 +64,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(Long id) {
-        ProductEntity productEntity = findProductEntityById(id);
-        return productEntity.toProduct();
+        return findProductEntityById(id).toProduct();
     }
 
     @Override

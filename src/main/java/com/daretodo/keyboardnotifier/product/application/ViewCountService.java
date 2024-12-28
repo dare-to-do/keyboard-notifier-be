@@ -5,8 +5,6 @@ import com.daretodo.keyboardnotifier.product.domain.ProductRepository;
 import com.daretodo.keyboardnotifier.product.infrastructure.RetryPolicy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +16,6 @@ public class ViewCountService {
 
     private final RetryPolicy retryPolicy;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void increaseViewCount(Product product) {
         retryPolicy.retryWithOptimisticLock(() -> productRepository.increaseViewCount(product), MAX_RETRY_COUNT,
                 VIEW_COUNT_UPDATE_ERROR_MESSAGE);

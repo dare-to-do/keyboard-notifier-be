@@ -56,7 +56,6 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional(readOnly = true)
     void 전체_상품을_조회한다() {
         // given
         ProductsRequestCondition condition = FixtureMonkey.builder()
@@ -87,10 +86,9 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    void 특정_상품을_조회한다() {
+    void 단일_상품을_조회한다() {
         // given
         Product product = productFixtureBuilder
-                .id(1L)
                 .name("Product A")
                 .price(1000L)
                 .build();
@@ -107,7 +105,6 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional(readOnly = true)
     void 유사한_상품을_조회한다() {
         // given
         List<ProductEntity> products = getProductEntitiesWithNameTypePeriod();
