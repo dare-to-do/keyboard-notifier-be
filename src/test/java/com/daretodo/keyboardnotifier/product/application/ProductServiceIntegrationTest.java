@@ -11,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -96,9 +95,6 @@ class ProductServiceIntegrationTest {
 
         ProductEntity productEntity = ProductEntity.fromDomain(product);
         ProductEntity saved = productJpaRepository.save(productEntity);
-        TestTransaction.flagForCommit();
-        TestTransaction.end();
-        TestTransaction.start();
 
         // when
         var result = sut.findProduct(saved.getId());
