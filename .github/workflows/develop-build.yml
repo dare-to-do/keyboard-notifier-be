@@ -25,6 +25,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Create application.yml
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION }}" > src/main/resources/application.yml
+        shell: bash
+
       # Build the project (adjust command based on your build system)
       - name: Build Project
         run: ./gradlew build
