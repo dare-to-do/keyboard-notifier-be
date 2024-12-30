@@ -46,14 +46,14 @@ jobs:
           key: ${{ env.EC2_KEY }}
           port: 22
           script: |
-            # Stop existing container (if running)
-            docker ps -q --filter "name=keyboard-notifier-be" | grep -q . && docker stop keyboard-notifier-be && docker rm keyboard-notifier-be || true
+            # Remove existing container
+            docker rm -f keyboard-notifier-be || true
 
             # Pull the specified image from Docker Hub
             docker pull ${{ env.DOCKER_IMAGE }}
-
+            
             # Run the new container
-            docker run -d --name keyboard-notifier-be -p 8080:8080 ${{ env.DOCKER_IMAGE }}
+            docker run -d --rm --name keyboard-notifier-be -p 8080:8080 ${{ env.DOCKER_IMAGE }}
 
       # Notify deployment success
       - name: Notify Slack (Deployment Success)
