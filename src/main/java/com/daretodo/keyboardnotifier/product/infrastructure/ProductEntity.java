@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -100,9 +101,10 @@ public class ProductEntity extends BaseTimeEntity {
 
     public Product toProduct() {
         List<String> imageUrls = new ArrayList<>();
-        for (String imageUrl : imageUrl.split(",")) {
-            imageUrls.add(imageUrl);
+        if (imageUrl != null) {
+            imageUrls.addAll(Arrays.asList(imageUrl.split(",")));
         }
+
         return Product.builder()
                 .id(id)
                 .name(name)
