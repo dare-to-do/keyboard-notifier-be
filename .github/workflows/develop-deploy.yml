@@ -48,7 +48,10 @@ jobs:
           script: |
             # Remove existing container
             docker rm -f keyboard-notifier-be || true
-
+            
+            # Remove Previous Image
+            docker rmi -f ${{ env.DOCKER_IMAGE }} || true
+            
             # Pull the specified image from Docker Hub
             docker pull ${{ env.DOCKER_IMAGE }}
             
