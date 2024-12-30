@@ -22,7 +22,7 @@ import static com.daretodo.keyboardnotifier.product.infrastructure.QProductEntit
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private static final int SIMILAR_PRODUCT_COUNT = 6;
+    public static final int SIMILAR_PRODUCT_COUNT = 6;
     private final ProductJpaRepository productJpaRepository;
     private final JPAQueryFactory queryFactory;
 
