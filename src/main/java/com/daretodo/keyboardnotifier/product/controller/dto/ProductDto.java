@@ -4,6 +4,7 @@ import com.daretodo.keyboardnotifier.product.domain.*;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +26,10 @@ public record ProductDto(
             throw new IllegalArgumentException("시작일은 종료일보다 이전이어야 합니다.");
         }
 
-        List<String> imageUrls = Arrays.asList(imageUrl.split(","));
+        List<String> imageUrls = new ArrayList<>();
+        if (imageUrl != null) {
+            imageUrls = Arrays.asList(imageUrl.split(","));
+        }
 
         Assert.hasText(name, "상품명은 필수입니다.");
         Assert.notNull(price, "가격은 필수입니다.");
