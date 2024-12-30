@@ -11,7 +11,7 @@ jobs:
 
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-      DOCKER_TAG: d.$(date +'%y%m%d')-2
+      DOCKER_TAG: d.$(date +'%y%m%d')
 
     steps:
       # Checkout the code
