@@ -4,36 +4,30 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class GroupBuy {
     private final Long id;
     private final Long productId;
-    private final int minParticipants;
-    private final int maxParticipants;
     private final LocalDateTime startDateTime;
     private final LocalDateTime endDateTime;
     private final GroupBuyStatus status;
     private List<GroupBuyParticipant> participants;
 
     @Builder
-    public GroupBuy(Long id, Long productId, int minParticipants, int maxParticipants, LocalDateTime startDateTime, LocalDateTime endDateTime,
-                   GroupBuyStatus status) {
+    public GroupBuy(Long id, Long productId, LocalDateTime startDateTime, LocalDateTime endDateTime,
+                   GroupBuyStatus status, List<GroupBuyParticipant> participants) {
         this.id = id;
         this.productId = productId;
-        this.minParticipants = minParticipants;
-        this.maxParticipants = maxParticipants;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.status = status;
-        this.participants = new ArrayList<>();
+        this.participants = participants;
     }
 
     public boolean canJoin() {
-        return status == GroupBuyStatus.ACTIVE && 
-               getActiveParticipantCount() < maxParticipants &&
+        return status == GroupBuyStatus.ACTIVE &&
                LocalDateTime.now().isBefore(endDateTime);
     }
 
@@ -47,18 +41,14 @@ public class GroupBuy {
         this.participants.add(participant);
     }
 
-    public boolean isSuccessful() {
-        return getActiveParticipantCount() >= minParticipants;
-    }
-
-    public int getActiveParticipantCount() {
-        return (int) participants.stream()
-                .filter(GroupBuyParticipant::isActive)
-                .count();
-    }
-
     private boolean isAlreadyJoined(Long userId) {
         return participants.stream()
                 .anyMatch(p -> p.getUserId().equals(userId) && p.isActive());
+    }
+
+    public void validAlreadyParticipatedUser(Long userId) {
+        if (isAlreadyJoined(userId)) {
+            throw new IllegalStateException("User has already joined this group buy");
+        }
     }
 }

@@ -25,7 +25,7 @@ public class ProductService {
 
     @Transactional
     public Integer createProducts(List<Product> products) {
-        return productRepository.saveAll(products);
+        return productRepository.saveAll(products).size();
     }
 
     public Page<ProductResponse> findAllProducts(ProductStatus productStatus, ProductType productType,

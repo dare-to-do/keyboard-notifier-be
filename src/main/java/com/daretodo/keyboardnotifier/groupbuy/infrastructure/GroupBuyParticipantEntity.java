@@ -44,11 +44,11 @@ public class GroupBuyParticipantEntity {
 
     public GroupBuyParticipant toDomain() {
         return GroupBuyParticipant.builder()
-                .id(id)
-                .groupBuyId(groupBuyId)
-                .userId(userId)
-                .joinedAt(joinedAt)
-                .status(status)
-                .build();
+            .id(id)
+            .groupBuyId(groupBuyId)
+            .userId(userId)
+            .joinedAt(joinedAt)
+            .status(status)
+            .build();
     }
 }

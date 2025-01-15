@@ -3,6 +3,7 @@ package com.daretodo.keyboardnotifier.groupbuy.infrastructure;
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuy;
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuyStatus;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,12 +22,6 @@ public class GroupBuyEntity {
     @Column(name = "product_id")
     private Long productId;
 
-    @Column(name = "min_participants")
-    private int minParticipants;
-
-    @Column(name = "max_participants")
-    private int maxParticipants;
-
     @Column(name = "start_date_time")
     private LocalDateTime startDateTime;
 
@@ -37,32 +32,32 @@ public class GroupBuyEntity {
     @Column(nullable = false)
     private GroupBuyStatus status;
 
-    @Column(name = "current_participants")
-    private int currentParticipants;
+    @OneToMany(mappedBy = "groupBuyId", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "group_buy_participants")
+    private List<GroupBuyParticipantEntity> groupBuyParticipants;
 
     public static GroupBuyEntity from(GroupBuy groupBuy) {
         GroupBuyEntity entity = new GroupBuyEntity();
         entity.id = groupBuy.getId();
         entity.productId = groupBuy.getProductId();
-        entity.minParticipants = groupBuy.getMinParticipants();
-        entity.maxParticipants = groupBuy.getMaxParticipants();
         entity.startDateTime = groupBuy.getStartDateTime();
         entity.endDateTime = groupBuy.getEndDateTime();
         entity.status = groupBuy.getStatus();
-        entity.currentParticipants = groupBuy.getParticipants();
+        entity.groupBuyParticipants = groupBuy.getParticipants().stream()
+                .map(GroupBuyParticipantEntity::from)
+                .toList();
         return entity;
     }
 
     public GroupBuy toDomain() {
         return GroupBuy.builder()
-                .id(id)
-                .productId(productId)
-                .minParticipants(minParticipants)
-                .maxParticipants(maxParticipants)
-                .startDateTime(startDateTime)
-                .endDateTime(endDateTime)
-                .status(status)
-                .currentParticipants(currentParticipants)
-                .build();
+            .id(id)
+            .productId(productId)
+            .startDateTime(startDateTime)
+            .endDateTime(endDateTime)
+            .status(status)
+            .participants(groupBuyParticipants.stream()
+                .map(GroupBuyParticipantEntity::toDomain).toList())
+            .build();
     }
 }

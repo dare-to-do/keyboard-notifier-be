@@ -27,8 +27,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Integer saveAll(List<Product> products) {
-        return productJpaRepository.saveAll(ProductEntity.fromDomain(products)).size();
+    public List<Product> saveAll(List<Product> products) {
+        return productJpaRepository.saveAll(ProductEntity.fromDomain(products)).stream()
+                .map(ProductEntity::toProduct)
+                .toList();
     }
 
     @Override
