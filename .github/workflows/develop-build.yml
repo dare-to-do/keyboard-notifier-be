@@ -11,7 +11,7 @@ jobs:
 
     env:
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-      DOCKER_TAG: d.$(date +'%y%m%d')-2
+      DOCKER_TAG: d.$(date +'%y%m%d')
 
     steps:
       # Checkout the code
@@ -25,6 +25,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Create application.yml
+        run: |
+          mkdir -p src/main/resources
+          echo "${{ secrets.APPLICATION }}" > src/main/resources/application.yml
+        shell: bash
+
       # Build the project (adjust command based on your build system)
       - name: Build Project
         run: ./gradlew build
@@ -32,7 +38,7 @@ jobs:
       # Build Docker image
       - name: Build Docker Image
         run: |
-          docker build -t dare-to-do/keyboard-notifier-be:${{ env.DOCKER_TAG }} .
+          docker build -t juy4556/keyboard-notifier-be:${{ env.DOCKER_TAG }} .
 
       # Push Docker image to Docker Hub (or your registry)
       - name: Push Docker Image
@@ -41,7 +47,7 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          docker push dare-to-do/keyboard-notifier-be:${{ env.DOCKER_TAG }}
+          docker push juy4556/keyboard-notifier-be:${{ env.DOCKER_TAG }}
 
       # Send Slack Notification
       - name: Send Slack Notification
@@ -50,7 +56,7 @@ jobs:
           webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           message: |
             :white_check_mark: *keyboard-notifier-be 환경 빌드 완료*
-            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Repo*: `juy4556/keyboard-notifier-be`
             *Branch*: `develop`
             *Github Action*: `publish on develop`
             *Actor*: `${{ github.actor }}`

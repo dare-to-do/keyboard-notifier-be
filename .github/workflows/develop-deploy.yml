@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DOCKER_IMAGE: dare-to-do/keyboard-notifier-be:${{ github.event.inputs.docker_tag }}
+      DOCKER_IMAGE: juy4556/keyboard-notifier-be:${{ github.event.inputs.docker_tag }}
       EC2_HOST: ${{ secrets.EC2_HOST }}
       EC2_USER: ${{ secrets.EC2_USER }}
       EC2_KEY: ${{ secrets.EC2_KEY }}
@@ -27,7 +27,7 @@ jobs:
           webhook_url: ${{ env.SLACK_WEBHOOK_URL }}
           message: |
             :hourglass_flowing_sand: *배포 실행중입니다*
-            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Repo*: `juy4556/keyboard-notifier-be`
             *Branch*: `develop`
             *Docker Tag*: `${{ github.event.inputs.docker_tag }}`
           username: "GitHub Actions"
@@ -46,14 +46,17 @@ jobs:
           key: ${{ env.EC2_KEY }}
           port: 22
           script: |
-            # Stop existing container (if running)
-            docker ps -q --filter "name=keyboard-notifier-be" | grep -q . && docker stop keyboard-notifier-be && docker rm keyboard-notifier-be || true
-
+            # Remove existing container
+            docker rm -f keyboard-notifier-be || true
+            
+            # Remove Previous Image
+            docker rmi -f ${{ env.DOCKER_IMAGE }} || true
+            
             # Pull the specified image from Docker Hub
             docker pull ${{ env.DOCKER_IMAGE }}
-
+            
             # Run the new container
-            docker run -d --name keyboard-notifier-be -p 8080:8080 ${{ env.DOCKER_IMAGE }}
+            docker run -d --rm --name keyboard-notifier-be -p 8080:8080 ${{ env.DOCKER_IMAGE }}
 
       # Notify deployment success
       - name: Notify Slack (Deployment Success)
@@ -63,7 +66,7 @@ jobs:
           webhook_url: ${{ env.SLACK_WEBHOOK_URL }}
           message: |
             :white_check_mark: *배포 성공!!*
-            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Repo*: `juy4556/keyboard-notifier-be`
             *Branch*: `develop`
             *Docker Tag*: `${{ github.event.inputs.docker_tag }}`
             *Status*: `Success`
@@ -78,7 +81,7 @@ jobs:
           webhook_url: ${{ env.SLACK_WEBHOOK_URL }}
           message: |
             :x: *배포 실패*
-            *Repo*: `dare-to-do/keyboard-notifier-be`
+            *Repo*: `juy4556/keyboard-notifier-be`
             *Branch*: `develop`
             *Docker Tag*: `${{ github.event.inputs.docker_tag }}`
             *Status*: `Failed`
