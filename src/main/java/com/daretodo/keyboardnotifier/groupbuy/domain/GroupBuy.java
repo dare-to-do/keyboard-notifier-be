@@ -1,5 +1,6 @@
 package com.daretodo.keyboardnotifier.groupbuy.domain;
 
+import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,20 +24,20 @@ public class GroupBuy {
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.status = status;
-        this.participants = participants;
+        this.participants = participants != null ? new ArrayList<>(participants) : new ArrayList<>();
     }
 
     public boolean canJoin() {
-        return status == GroupBuyStatus.ACTIVE &&
+        return status == GroupBuyStatus.IN_PROGRESS &&
                LocalDateTime.now().isBefore(endDateTime);
     }
 
     public void addParticipant(GroupBuyParticipant participant) {
         if (!canJoin()) {
-            throw new IllegalStateException("Cannot join this group buy");
+            throw new IllegalStateException("이미 종료된 공제이거나 시작되지 않은 공제입니다.");
         }
         if (isAlreadyJoined(participant.getUserId())) {
-            throw new IllegalStateException("User has already joined this group buy");
+            throw new IllegalStateException("이미 참가된 공제입니다");
         }
         this.participants.add(participant);
     }
@@ -48,7 +49,7 @@ public class GroupBuy {
 
     public void validAlreadyParticipatedUser(Long userId) {
         if (isAlreadyJoined(userId)) {
-            throw new IllegalStateException("User has already joined this group buy");
+            throw new IllegalStateException("이미 참가된 공제입니다");
         }
     }
 }

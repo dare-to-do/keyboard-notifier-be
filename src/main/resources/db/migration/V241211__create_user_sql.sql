@@ -1,8 +1,8 @@
-CREATE TABLE user_entity
+CREATE TABLE users
 (
     id           BIGINT AUTO_INCREMENT NOT NULL,
-    name         VARCHAR(30) NULL,
-    email        VARCHAR(30) NULL,
-    phone_number VARCHAR(30) NULL,
-    CONSTRAINT pk_userentity PRIMARY KEY (id)
+    name         VARCHAR(255) NULL,
+    email        VARCHAR(255) NULL,
+    phone_number VARCHAR(255) NULL,
+    CONSTRAINT pk_users PRIMARY KEY (id)
 );

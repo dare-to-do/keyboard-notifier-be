@@ -20,7 +20,7 @@ class GroupBuyTest {
         void 진행중_상태의_공제에만_참여가_가능하다() {
             // given
             GroupBuy groupBuy = GroupBuy.builder()
-                .status(GroupBuyStatus.ACTIVE)
+                .status(GroupBuyStatus.IN_PROGRESS)
                 .endDateTime(LocalDateTime.now().plusDays(1))
                 .build();
 
@@ -32,7 +32,7 @@ class GroupBuyTest {
         }
 
         @ParameterizedTest
-        @EnumSource(value = GroupBuyStatus.class, mode = EnumSource.Mode.EXCLUDE, names = "ACTIVE")
+        @EnumSource(value = GroupBuyStatus.class, mode = EnumSource.Mode.EXCLUDE, names = "IN_PROGRESS")
         void 진행중_상태가_아닌_공제는_참여가_불가능하다(GroupBuyStatus status) {
             // given
             GroupBuy groupBuy = GroupBuy.builder()
@@ -83,7 +83,7 @@ class GroupBuyTest {
         void 이미_참여한_사용자가_공제에_참여하려고_하는_경우_예외가_발생한다() {
             // given
             GroupBuy groupBuy = GroupBuy.builder()
-                .status(GroupBuyStatus.ACTIVE)
+                .status(GroupBuyStatus.IN_PROGRESS)
                 .endDateTime(LocalDateTime.now().plusDays(1))
                 .participants(List.of(
                     GroupBuyParticipant.builder().userId(1L).status(GroupBuyParticipantStatus.ACTIVE).build()
