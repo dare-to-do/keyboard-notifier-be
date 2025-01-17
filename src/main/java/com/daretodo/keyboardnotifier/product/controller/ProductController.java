@@ -2,8 +2,8 @@ package com.daretodo.keyboardnotifier.product.controller;
 
 import com.daretodo.keyboardnotifier.common.SokeyResponseBody;
 import com.daretodo.keyboardnotifier.common.PageableOutput;
-import com.daretodo.keyboardnotifier.groupbuy.controller.GroupBuyService;
-import com.daretodo.keyboardnotifier.groupbuy.controller.GroupBuySubscribeRequest;
+import com.daretodo.keyboardnotifier.groupbuy.application.GroupBuyService;
+import com.daretodo.keyboardnotifier.product.controller.dto.GroupBuySubscribeRequest;
 import com.daretodo.keyboardnotifier.product.application.dto.ProductResponse;
 import com.daretodo.keyboardnotifier.product.application.ProductService;
 import com.daretodo.keyboardnotifier.product.controller.dto.ProductCreateRequest;

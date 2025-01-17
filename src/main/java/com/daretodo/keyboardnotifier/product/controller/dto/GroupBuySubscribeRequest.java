@@ -1,4 +1,4 @@
-package com.daretodo.keyboardnotifier.groupbuy.controller;
+package com.daretodo.keyboardnotifier.product.controller.dto;
 
 import jakarta.validation.constraints.Email;
 

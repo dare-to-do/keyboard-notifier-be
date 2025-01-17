@@ -1,4 +1,4 @@
-package com.daretodo.keyboardnotifier.groupbuy.controller;
+package com.daretodo.keyboardnotifier.groupbuy.application;
 
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuy;
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuyParticipant;
