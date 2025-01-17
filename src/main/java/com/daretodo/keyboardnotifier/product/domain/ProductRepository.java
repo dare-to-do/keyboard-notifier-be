@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductRepository {
 
-    Integer saveAll(List<Product> products);
+    List<Product> saveAll(List<Product> products);
 
     Page<Product> findAllProducts(ProductStatus productStatus, ProductType productType,
                                         Pageable pageable, ProductSortBy sortBy);

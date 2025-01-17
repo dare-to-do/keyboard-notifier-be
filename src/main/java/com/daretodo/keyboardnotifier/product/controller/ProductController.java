@@ -2,10 +2,13 @@ package com.daretodo.keyboardnotifier.product.controller;
 
 import com.daretodo.keyboardnotifier.common.SokeyResponseBody;
 import com.daretodo.keyboardnotifier.common.PageableOutput;
+import com.daretodo.keyboardnotifier.groupbuy.application.GroupBuyService;
+import com.daretodo.keyboardnotifier.product.controller.dto.GroupBuySubscribeRequest;
 import com.daretodo.keyboardnotifier.product.application.dto.ProductResponse;
 import com.daretodo.keyboardnotifier.product.application.ProductService;
 import com.daretodo.keyboardnotifier.product.controller.dto.ProductCreateRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +20,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final GroupBuyService groupBuyService;
 
     @Operation(summary = "상품 다건 등록")
     @PostMapping
@@ -46,6 +50,13 @@ public class ProductController {
         return SokeyResponseBody.success(products);
     }
 
+    @Operation(summary = "공제 알림 신청")
+    @PostMapping("/{id}/group-buy")
+    public SokeyResponseBody<Void> subscribeGroupBuy(@PathVariable Long id, @Valid GroupBuySubscribeRequest request) {
+        groupBuyService.subscribeGroupBuy(id, request.email());
+        return SokeyResponseBody.success();
+    }
+  
     @Operation(summary = "상품 삭제")
     @DeleteMapping("/{id}")
     public SokeyResponseBody<Void> deleteProduct(@PathVariable Long id) {
