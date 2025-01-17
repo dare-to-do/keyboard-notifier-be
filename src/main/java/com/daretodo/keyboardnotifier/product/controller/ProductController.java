@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     @Operation(summary = "공제 알림 신청")
-    @PostMapping("/{id}/group-buy")
+    @PostMapping("/{id}/alarm")
     public SokeyResponseBody<Void> subscribeGroupBuy(@PathVariable Long id, @Valid GroupBuySubscribeRequest request) {
         groupBuyService.subscribeGroupBuy(id, request.email());
         return SokeyResponseBody.success();
