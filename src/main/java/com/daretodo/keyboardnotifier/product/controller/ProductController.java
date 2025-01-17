@@ -56,4 +56,11 @@ public class ProductController {
         groupBuyService.subscribeGroupBuy(id, request.email());
         return SokeyResponseBody.success();
     }
+  
+    @Operation(summary = "상품 삭제")
+    @DeleteMapping("/{id}")
+    public SokeyResponseBody<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return SokeyResponseBody.success();
+    }
 }

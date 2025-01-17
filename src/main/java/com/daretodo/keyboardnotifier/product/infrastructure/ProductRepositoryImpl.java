@@ -22,7 +22,7 @@ import static com.daretodo.keyboardnotifier.product.infrastructure.QProductEntit
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private static final int SIMILAR_PRODUCT_COUNT = 6;
+    public static final int SIMILAR_PRODUCT_COUNT = 6;
     private final ProductJpaRepository productJpaRepository;
     private final JPAQueryFactory queryFactory;
 
@@ -66,8 +66,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product findById(Long id) {
-        ProductEntity productEntity = findProductEntityById(id);
-        return productEntity.toProduct();
+        return findProductEntityById(id).toProduct();
     }
 
     @Override
@@ -85,6 +84,25 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .limit(SIMILAR_PRODUCT_COUNT)
                 .fetch();
 
+        if (productEntities.size() == SIMILAR_PRODUCT_COUNT) {
+            return productEntities.stream().map(ProductEntity::toProduct).toList();
+        }
+
+        List<Long> productEntitiesIds = productEntities.stream().map(ProductEntity::getId).toList();
+
+        booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(productEntity.period.endDate.after(LocalDateTime.now()));
+        booleanBuilder.and(productEntity.id.ne(id));
+        booleanBuilder.and(productEntity.id.notIn(productEntitiesIds));
+
+        productEntities.addAll(
+                queryFactory.selectFrom(productEntity)
+                        .where(booleanBuilder)
+                        .orderBy(productEntity.period.endDate.asc(), productEntity.viewCount.viewCount.desc())
+                        .limit(SIMILAR_PRODUCT_COUNT - productEntities.size())
+                        .fetch()
+        );
+
         return productEntities.stream().map(ProductEntity::toProduct).toList();
     }
 
@@ -92,6 +110,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void increaseViewCount(Product product) {
         ProductEntity productEntity = findProductEntityById(product.getId());
         productEntity.increaseViewCount();
+    }
+
+    @Override
+    public void save(Product product) {
+        productJpaRepository.save(ProductEntity.fromDomain(product));
     }
 
     private ProductEntity findProductEntityById(Long id) {

@@ -18,4 +18,6 @@ public interface ProductRepository {
     List<Product> findSimilarProducts(Long id);
 
     void increaseViewCount(Product product);
+
+    void save(Product product);
 }

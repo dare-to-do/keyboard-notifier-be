@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.daretodo.keyboardnotifier.product.infrastructure.ProductRepositoryImpl.SIMILAR_PRODUCT_COUNT;
 import static com.navercorp.fixturemonkey.api.expression.JavaGetterMethodPropertySelector.javaGetter;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -56,7 +57,6 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional(readOnly = true)
     void 전체_상품을_조회한다() {
         // given
         ProductsRequestCondition condition = FixtureMonkey.builder()
@@ -87,10 +87,9 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    void 특정_상품을_조회한다() {
+    void 단일_상품을_조회한다() {
         // given
         Product product = productFixtureBuilder
-                .id(1L)
                 .name("Product A")
                 .price(1000L)
                 .build();
@@ -107,7 +106,6 @@ class ProductServiceIntegrationTest {
     }
 
     @Test
-    @Transactional(readOnly = true)
     void 유사한_상품을_조회한다() {
         // given
         List<ProductEntity> products = getProductEntitiesWithNameTypePeriod();
@@ -118,7 +116,7 @@ class ProductServiceIntegrationTest {
         var result = sut.findSimilarProducts(savedEntities.get(0).getId());
 
         // then
-        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.size()).isEqualTo(SIMILAR_PRODUCT_COUNT);
         assertThat(result.get(0).name()).isEqualTo("Product D");
         assertThat(result.get(1).name()).isEqualTo("Product E");
     }
@@ -154,13 +152,27 @@ class ProductServiceIntegrationTest {
                 .productType(ProductType.KEYBOARD)
                 .period(createPeriod(5))
                 .build();
+        Product product6 = productFixtureBuilder
+                .id(6L)
+                .name("Product F")
+                .productType(ProductType.KEYCAP)
+                .period(createPeriod(6))
+                .build();
+        Product product7 = productFixtureBuilder
+                .id(7L)
+                .name("Product G")
+                .productType(ProductType.KIT)
+                .period(createPeriod(7))
+                .build();
 
         return List.of(
                 ProductEntity.fromDomain(product1),
                 ProductEntity.fromDomain(product2),
                 ProductEntity.fromDomain(product3),
                 ProductEntity.fromDomain(product4),
-                ProductEntity.fromDomain(product5)
+                ProductEntity.fromDomain(product5),
+                ProductEntity.fromDomain(product6),
+                ProductEntity.fromDomain(product7)
         );
     }
 
