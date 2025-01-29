@@ -127,4 +127,8 @@ public class ProductEntity extends BaseTimeEntity {
     public void increaseViewCount() {
         viewCount.increaseViewCount();
     }
+
+    public void delete() {
+        status = ProductStatus.DELETED;
+    }
 }
