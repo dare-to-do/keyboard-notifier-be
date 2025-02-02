@@ -19,6 +19,9 @@ public class GroupBuyNotificationEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "message_id")
+    private String messageId;
+
     @Column(name = "group_buy_id", nullable = false)
     private Long groupBuyId;
 
@@ -32,19 +35,21 @@ public class GroupBuyNotificationEntity extends BaseTimeEntity {
     public static GroupBuyNotificationEntity from(GroupBuyNotification notification) {
         GroupBuyNotificationEntity entity = new GroupBuyNotificationEntity();
         entity.id = notification.getId();
+        entity.messageId = notification.getMessageId();
         entity.groupBuyId = notification.getGroupBuyId();
         entity.receiverId = notification.getReceiverId();
         entity.status = notification.getStatus();
-        entity.createdAt = notification.getCreatedAt();
-        entity.createdBy = notification.getCreatedBy();
-        entity.updatedAt = notification.getUpdatedAt();
-        entity.updatedBy = notification.getUpdatedBy();
+        entity.createdAt = notification.getCreatedAt() != null ? notification.getCreatedAt() : LocalDateTime.now();
+        entity.createdBy = notification.getCreatedBy() != null ? notification.getCreatedBy() : "SYSTEM";
+        entity.updatedAt = notification.getUpdatedAt() != null ? notification.getUpdatedAt() : LocalDateTime.now();
+        entity.updatedBy = notification.getUpdatedBy() != null ? notification.getUpdatedBy() : "SYSTEM";
         return entity;
     }
 
     public GroupBuyNotification toDomain() {
         return GroupBuyNotification.builder()
                 .id(id)
+                .messageId(messageId)
                 .groupBuyId(groupBuyId)
                 .receiverId(receiverId)
                 .status(status)
