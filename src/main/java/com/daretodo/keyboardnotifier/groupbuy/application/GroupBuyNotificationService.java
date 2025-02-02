@@ -46,6 +46,9 @@ public class GroupBuyNotificationService {
             log.info("participants:" + participants);
 
             for (GroupBuyParticipant participant : participants) {
+                if (participant.getStatus() != GroupBuyParticipantStatus.ACTIVE) {
+                    continue;
+                }
                 User user = userRepository.findById(participant.getUserId());
                 SendEmailResponse sendEmailResponse = sendEmail(user.getEmail(), "제목", "내용");
 
