@@ -1,6 +1,8 @@
 package com.daretodo.keyboardnotifier.groupbuy.application;
 
 import com.daretodo.keyboardnotifier.groupbuy.domain.*;
+import com.daretodo.keyboardnotifier.product.domain.Product;
+import com.daretodo.keyboardnotifier.product.domain.ProductRepository;
 import com.daretodo.keyboardnotifier.user.domain.User;
 import com.daretodo.keyboardnotifier.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.daretodo.keyboardnotifier.common.util.DateUtil.formatDateWithTime;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,8 +29,13 @@ public class GroupBuyNotificationService {
     private final GroupBuyNotificationRepository groupBuyNotificationRepository;
     private final GroupBuyParticipantRepository groupBuyParticipantRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+
     @Value("${app.email}")
     private String senderEmail;
+
+    @Value("${app.feedback-form-link}")
+    private String feedbackFormLink;
 
     @Scheduled(cron = "${app.schedules.cron.group-buy-notification}")
     @Transactional
@@ -48,8 +57,19 @@ public class GroupBuyNotificationService {
                 if (participant.getStatus() != GroupBuyParticipantStatus.PARTICIPATED) {
                     continue;
                 }
+
                 User user = userRepository.findById(participant.getUserId());
-                SendEmailResponse sendEmailResponse = sendEmail(user.getEmail(), "제목", "내용");
+                Product product = productRepository.findById(groupBuy.getProductId());
+
+                String title = generateStartTitle(product.getName());
+                String content = generateStartContent(
+                        product.getName(),
+                        formatDateWithTime(groupBuy.getEndDateTime()),
+                        product.getProductUrl(),
+                        feedbackFormLink
+                );
+
+                SendEmailResponse sendEmailResponse = sendEmail(user.getEmail(), title, content);
 
                 if (sendEmailResponse != null && sendEmailResponse.messageId() != null) {
                     groupBuyNotificationRepository.save(GroupBuyNotification.builder()
@@ -71,13 +91,13 @@ public class GroupBuyNotificationService {
         }
     }
 
-    private SendEmailResponse sendEmail(String recipient, String subject, String bodyHTML) {
+    private SendEmailResponse sendEmail(String recipient, String subject, String bodyContent) {
         Destination destination = Destination.builder()
                 .toAddresses(recipient)
                 .build();
 
         Content content = Content.builder()
-                .data(bodyHTML)
+                .data(bodyContent)
                 .build();
 
         Content sub = Content.builder()
@@ -107,4 +127,25 @@ public class GroupBuyNotificationService {
 
         return null;
     }
+
+    private String generateStartTitle(String productName) {
+        return String.format("[Sokey]%s 공제 시작", productName);
+    }
+
+    private String generateStartContent(String productName, String endDate, String productLink, String feedbackFormLink) {
+        return String.format(
+                "<html>" +
+                        "<body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>" +
+                        "<p>안녕하세요, <b>Sokey</b>에서 공제 일정 소식 알려드립니다.</p>" +
+                        "<p>관심상품으로 등록하신 <b>%s</b> 공제가 오늘부터 <b>%s</b>까지 진행 될 예정입니다.</p>" +
+                        "<p>관련 상세 정보는 아래 링크를 통해 확인하세요.</p>" +
+                        "<p><a href='%s' style='color: #0066cc; text-decoration: none;'><b>%s</b></a></p>" +
+                        "<p>Sokey 서비스를 이용하시면서 불편하셨던 점이나 개선 사항이 있다면 문의 남겨주세요.</p>" +
+                        "<p><a href='%s' style='color: #0066cc; text-decoration: none;'><b>%s</b></a></p>" +
+                        "</body>" +
+                        "</html>",
+                productName, endDate, productLink, productLink, feedbackFormLink, feedbackFormLink
+        );
+    }
+
 }
