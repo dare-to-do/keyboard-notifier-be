@@ -24,6 +24,6 @@ public class GroupBuyParticipant {
     }
 
     public boolean isActive() {
-        return this.status == GroupBuyParticipantStatus.ACTIVE;
+        return this.status == GroupBuyParticipantStatus.PARTICIPATED;
     }
 }

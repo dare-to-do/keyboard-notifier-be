@@ -45,7 +45,7 @@ public class GroupBuyNotificationService {
             List<GroupBuyParticipant> participants = groupBuy.getParticipants();
 
             for (GroupBuyParticipant participant : participants) {
-                if (participant.getStatus() != GroupBuyParticipantStatus.ACTIVE) {
+                if (participant.getStatus() != GroupBuyParticipantStatus.PARTICIPATED) {
                     continue;
                 }
                 User user = userRepository.findById(participant.getUserId());
