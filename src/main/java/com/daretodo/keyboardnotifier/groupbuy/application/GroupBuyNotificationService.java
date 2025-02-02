@@ -23,6 +23,7 @@ public class GroupBuyNotificationService {
     private final SesClient sesClient;
     private final GroupBuyRepository groupBuyRepository;
     private final GroupBuyNotificationRepository groupBuyNotificationRepository;
+    private final GroupBuyParticipantRepository groupBuyParticipantRepository;
     private final UserRepository userRepository;
     @Value("${app.email}")
     private String senderEmail;
@@ -33,7 +34,6 @@ public class GroupBuyNotificationService {
         LocalDate today = LocalDate.now();
         LocalDateTime todayNoon = today.atTime(12, 0);
         LocalDateTime tomorrowNoon = today.plusDays(1).atTime(12, 0);
-        log.info("scheduleDailyNotification start: {}", todayNoon);
 
         List<GroupBuy> groupBuys = groupBuyRepository.findAllByStartDateTimeBetween(todayNoon, tomorrowNoon);
 
@@ -43,7 +43,6 @@ public class GroupBuyNotificationService {
     private void sendGroupBuyStartNotification(List<GroupBuy> groupBuys) {
         for (GroupBuy groupBuy : groupBuys) {
             List<GroupBuyParticipant> participants = groupBuy.getParticipants();
-            log.info("participants:" + participants);
 
             for (GroupBuyParticipant participant : participants) {
                 if (participant.getStatus() != GroupBuyParticipantStatus.ACTIVE) {
@@ -54,13 +53,16 @@ public class GroupBuyNotificationService {
 
                 if (sendEmailResponse != null && sendEmailResponse.messageId() != null) {
                     groupBuyNotificationRepository.save(GroupBuyNotification.builder()
+                        .messageId(sendEmailResponse.messageId())
                         .receiverId(user.getId())
                         .groupBuyId(groupBuy.getId())
                         .status(GroupBuyNotificationStatus.SENT)
                         .build());
+                    groupBuyParticipantRepository.updateStatus(participant.getId(), GroupBuyParticipantStatus.COMPLETED);
                     continue;
                 }
                 groupBuyNotificationRepository.save(GroupBuyNotification.builder()
+                    .messageId(null)
                     .receiverId(user.getId())
                     .groupBuyId(groupBuy.getId())
                     .status(GroupBuyNotificationStatus.FAILED)
