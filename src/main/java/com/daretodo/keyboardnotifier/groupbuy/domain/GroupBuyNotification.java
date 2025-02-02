@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 public class GroupBuyNotification {
     private final Long id;
 
+    private final String messageId;
+
     private final Long groupBuyId;
 
     private final Long receiverId;
@@ -24,9 +26,10 @@ public class GroupBuyNotification {
     private String updatedBy;
 
     @Builder
-    public GroupBuyNotification(Long id, Long groupBuyId, Long receiverId, GroupBuyNotificationStatus status,
+    public GroupBuyNotification(Long id, String messageId, Long groupBuyId, Long receiverId, GroupBuyNotificationStatus status,
                                 LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
         this.id = id;
+        this.messageId = messageId;
         this.groupBuyId = groupBuyId;
         this.receiverId = receiverId;
         this.status = status;
@@ -34,10 +37,5 @@ public class GroupBuyNotification {
         this.updatedAt = updatedAt;
         this.createdBy = createdBy;
         this.updatedBy = updatedBy;
-    }
-
-    public void updateStatus(GroupBuyNotificationStatus status) {
-        this.status = status;
-        this.updatedAt = LocalDateTime.now();
     }
 }
