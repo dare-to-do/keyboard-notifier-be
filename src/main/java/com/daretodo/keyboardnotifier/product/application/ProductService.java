@@ -28,8 +28,12 @@ public class ProductService {
         return productRepository.saveAll(products).size();
     }
 
-    public Page<ProductResponse> findAllProducts(ProductStatus productStatus, ProductType productType,
-                                                 Pageable pageable, ProductSortBy sortBy) {
+    public Page<ProductResponse> findAllProducts(
+        ProductStatus productStatus,
+        ProductType productType,
+        Pageable pageable,
+        ProductSortBy sortBy
+    ) {
         Page<Product> products = productRepository.findAllProducts(productStatus, productType, pageable, sortBy);
         return productMapper.toProductResponsePage(products);
     }
