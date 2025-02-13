@@ -11,4 +11,6 @@ public interface GroupBuyJpaRepository extends JpaRepository<GroupBuyEntity, Lon
     Optional<GroupBuyEntity> findByProductId(Long productId);
 
     Stream<GroupBuyEntity> findAllByStartDateTimeBetween(LocalDateTime from, LocalDateTime to);
+
+    Stream<GroupBuyEntity> findAllByEndDateTimeBetween(LocalDateTime from, LocalDateTime to);
 }

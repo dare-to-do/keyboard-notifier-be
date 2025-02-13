@@ -9,5 +9,7 @@ public interface GroupBuyRepository {
 
     GroupBuy findByProductId(Long productId);
 
-    List<GroupBuy> findAllByStartDateTimeBetween(LocalDateTime localDateTime, LocalDateTime today);
+    List<GroupBuy> findAllByStartDateTimeBetween(LocalDateTime from, LocalDateTime to);
+
+    List<GroupBuy> findAllByEndDateTimeBetween(LocalDateTime from, LocalDateTime to);
 }

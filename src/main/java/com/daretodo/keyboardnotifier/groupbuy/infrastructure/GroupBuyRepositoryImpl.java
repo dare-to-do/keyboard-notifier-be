@@ -30,4 +30,9 @@ public class GroupBuyRepositoryImpl implements GroupBuyRepository {
         return groupBuyJpaRepository.findAllByStartDateTimeBetween(from, to).map(GroupBuyEntity::toDomain).toList();
     }
 
+    @Override
+    public List<GroupBuy> findAllByEndDateTimeBetween(LocalDateTime from, LocalDateTime to) {
+        return groupBuyJpaRepository.findAllByEndDateTimeBetween(from, to).map(GroupBuyEntity::toDomain).toList();
+    }
+
 }

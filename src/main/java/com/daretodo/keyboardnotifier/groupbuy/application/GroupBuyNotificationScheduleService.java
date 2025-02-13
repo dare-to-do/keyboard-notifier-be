@@ -24,9 +24,18 @@ public class GroupBuyNotificationScheduleService {
         LocalDateTime todayNoon = today.atTime(12, 0);
         LocalDateTime tomorrowNoon = today.plusDays(1).atTime(12, 0);
 
-        List<GroupBuy> groupBuys = groupBuyRepository.findAllByStartDateTimeBetween(todayNoon, tomorrowNoon);
+        LocalDate tomorrow = today.plusDays(1);
+        LocalDateTime tomorrowMidnight = tomorrow.atTime(0,0);
+        LocalDateTime theDayAfterTomorrowMidnight = tomorrow.plusDays(1).atTime(0, 0);
 
-        groupBuyNotificationService.sendGroupBuyStartNotification(groupBuys);
+        List<GroupBuy> startGroupBuys = groupBuyRepository
+                .findAllByStartDateTimeBetween(todayNoon, tomorrowNoon);
+
+        List<GroupBuy> endGroupBuys = groupBuyRepository
+                .findAllByEndDateTimeBetween(tomorrowMidnight, theDayAfterTomorrowMidnight);
+
+        groupBuyNotificationService.sendGroupBuyStartNotification(startGroupBuys);
+        groupBuyNotificationService.sendGroupBuyEndNotification(endGroupBuys);
     }
 
 }
