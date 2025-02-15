@@ -52,7 +52,6 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId);
-        product.delete();
-        productRepository.save(product);
+        productRepository.delete(product);
     }
 }

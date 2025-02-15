@@ -30,7 +30,7 @@ public class GroupBuyService {
             .groupBuyId(groupBuy.getId())
             .userId(user.getId())
             .joinedAt(LocalDateTime.now())
-            .status(GroupBuyParticipantStatus.ACTIVE)
+            .status(GroupBuyParticipantStatus.PARTICIPATED)
             .build();
         groupBuy.addParticipant(groupBuyParticipant);
 
