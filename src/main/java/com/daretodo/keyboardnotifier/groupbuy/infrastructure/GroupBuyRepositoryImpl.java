@@ -35,4 +35,11 @@ public class GroupBuyRepositoryImpl implements GroupBuyRepository {
         return groupBuyJpaRepository.findAllByEndDateTimeBetween(from, to).map(GroupBuyEntity::toDomain).toList();
     }
 
+
+    @Override
+    public List<GroupBuy> saveAll(List<GroupBuy> groupBuys) {
+        return groupBuyJpaRepository.saveAll(GroupBuyEntity.from(groupBuys)).stream()
+                .map(GroupBuyEntity::toDomain)
+                .toList();
+    }
 }

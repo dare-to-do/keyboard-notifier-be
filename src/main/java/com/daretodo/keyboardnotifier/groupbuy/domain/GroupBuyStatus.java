@@ -1,11 +1,25 @@
 package com.daretodo.keyboardnotifier.groupbuy.domain;
 
+import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
+import lombok.Getter;
+
+@Getter
 public enum GroupBuyStatus {
-    PENDING,    // 시작 전
-    IN_PROGRESS,     // 진행 중
-    COMPLETED,  // 성공적으로 완료
-    FAILED,     // 최소 인원 미달로 실패
-    CANCELLED,   // 취소됨
-    DELETED,     // 삭제됨
-    UNKNOWN     // 알수없음
+    PENDING("예정"),
+    IN_PROGRESS("진행"),
+    COMPLETED("완료"),
+    FAILED("실패"),
+    CANCELLED("취소"),
+    DELETED("삭제"),
+    UNKNOWN("알수없음");
+
+    private final String description;
+
+    GroupBuyStatus(String description) {
+        this.description = description;
+    }
+
+    GroupBuyStatus from(ProductStatus productStatus) {
+        return GroupBuyStatus.valueOf(productStatus.name());
+    }
 }

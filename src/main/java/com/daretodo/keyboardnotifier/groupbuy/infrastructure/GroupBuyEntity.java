@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "group_buys")
@@ -52,6 +53,15 @@ public class GroupBuyEntity extends BaseTimeEntity {
         entity.createdBy = groupBuy.getCreatedBy();
         entity.updatedBy = groupBuy.getUpdatedBy();
         return entity;
+    }
+
+    public static List<GroupBuyEntity> from(List<GroupBuy> groupBuys) {
+        List<GroupBuyEntity> groupBuyEntities = new ArrayList<>();
+        for (GroupBuy groupBuy: groupBuys) {
+            groupBuyEntities.add(from(groupBuy));
+        }
+
+        return groupBuyEntities;
     }
 
     public GroupBuy toDomain() {

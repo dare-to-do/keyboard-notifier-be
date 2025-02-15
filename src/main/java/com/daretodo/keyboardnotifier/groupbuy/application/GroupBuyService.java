@@ -1,15 +1,15 @@
 package com.daretodo.keyboardnotifier.groupbuy.application;
 
-import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuy;
-import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuyParticipant;
-import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuyParticipantStatus;
-import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuyRepository;
+import com.daretodo.keyboardnotifier.groupbuy.domain.*;
+import com.daretodo.keyboardnotifier.product.domain.Product;
 import com.daretodo.keyboardnotifier.user.domain.User;
 import com.daretodo.keyboardnotifier.user.domain.UserRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +35,23 @@ public class GroupBuyService {
         groupBuy.addParticipant(groupBuyParticipant);
 
         groupBuyRepository.save(groupBuy);
+    }
+
+    @Transactional
+    public void createGroupBuys(List<Product> products) {
+        List<GroupBuy> groupBuys = products.stream()
+                .map(product -> {
+                    LocalDateTime startDateTime = product.getPeriod().orElseThrow().getStartDate();
+                    LocalDateTime endDateTime = product.getPeriod().orElseThrow().getEndDate();
+
+                    return GroupBuy.builder()
+                        .productId(product.getId())
+                        .startDateTime(startDateTime)
+                        .endDateTime(endDateTime)
+                        .status(GroupBuyStatus.valueOf(product.getStatus().name()))
+                        .build();
+                }).toList();
+
+        groupBuyRepository.saveAll(groupBuys);
     }
 }

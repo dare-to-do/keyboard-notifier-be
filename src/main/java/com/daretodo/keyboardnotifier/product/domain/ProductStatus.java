@@ -4,10 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum ProductStatus {
-    NOT_YET("예정"),
-    IN_PROGRESS("진행중"),
-    DONE("종료"),
-    DELETED("삭제됨"),
+    PENDING("예정"),
+    IN_PROGRESS("진행"),
+    COMPLETED("완료"),
+    FAILED("실패"),
+    CANCELLED("취소"),
+    DELETED("삭제"),
     UNKNOWN("알수없음");
 
     private final String description;

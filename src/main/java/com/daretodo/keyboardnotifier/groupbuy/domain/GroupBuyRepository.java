@@ -12,4 +12,6 @@ public interface GroupBuyRepository {
     List<GroupBuy> findAllByStartDateTimeBetween(LocalDateTime from, LocalDateTime to);
 
     List<GroupBuy> findAllByEndDateTimeBetween(LocalDateTime from, LocalDateTime to);
+
+    List<GroupBuy> saveAll(List<GroupBuy> groupBuys);
 }
