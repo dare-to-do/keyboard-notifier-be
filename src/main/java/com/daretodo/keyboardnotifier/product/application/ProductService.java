@@ -1,5 +1,6 @@
 package com.daretodo.keyboardnotifier.product.application;
 
+import com.daretodo.keyboardnotifier.groupbuy.application.GroupBuyService;
 import com.daretodo.keyboardnotifier.product.application.dto.ProductResponse;
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
 import com.daretodo.keyboardnotifier.product.domain.Product;
@@ -22,10 +23,13 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductEventService productEventService;
     private final ProductMapper productMapper;
+    private final GroupBuyService groupBuyService;
 
     @Transactional
     public Integer createProducts(List<Product> products) {
-        return productRepository.saveAll(products).size();
+        List<Product> createdProducts = productRepository.saveAll(products);
+        groupBuyService.createGroupBuys(createdProducts);
+        return createdProducts.size();
     }
 
     public Page<ProductResponse> findAllProducts(ProductStatus productStatus, ProductType productType,
