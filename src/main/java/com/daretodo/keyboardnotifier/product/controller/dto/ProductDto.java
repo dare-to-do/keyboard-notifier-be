@@ -42,7 +42,7 @@ public record ProductDto(
                 .name(name)
                 .price(price)
                 .priceUnit(PriceUnit.from(unit))
-                .imageUrl(imageUrls)
+                .imageUrls(imageUrls)
                 .productUrl(productUrl)
                 .type(ProductType.from(productType))
                 .description(description)

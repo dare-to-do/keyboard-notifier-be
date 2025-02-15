@@ -27,7 +27,7 @@ public record ProductResponse(
                 product.getName(),
                 product.getPrice(),
                 product.getPriceUnit().getKoreanName(),
-                product.getImageUrl(),
+                product.getImageUrls(),
                 product.getProductUrl(),
                 product.getDescription(),
                 product.getPeriod().isEmpty() ? null : product.getPeriod().get().getStartDate(),

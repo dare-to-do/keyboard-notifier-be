@@ -14,7 +14,7 @@ public class Product {
     private String name;
     private Long price;
     private PriceUnit priceUnit;
-    private List<String> imageUrl;
+    private List<String> imageUrls;
     private String productUrl;
     private ProductType type;
     private String description;
@@ -27,14 +27,14 @@ public class Product {
     private ViewCount viewCount;
 
     @Builder
-    public Product(Long id, String name, Long price, PriceUnit priceUnit, List<String> imageUrl, String productUrl,
+    public Product(Long id, String name, Long price, PriceUnit priceUnit, List<String> imageUrls, String productUrl,
                    ProductType type, String description, Period period, ProductStatus status, LocalDateTime createdAt,
                    String createdBy, LocalDateTime updatedAt, String updatedBy, ViewCount viewCount) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.priceUnit = priceUnit;
-        this.imageUrl = imageUrl;
+        this.imageUrls = imageUrls;
         this.productUrl = productUrl;
         this.type = type;
         this.description = description;

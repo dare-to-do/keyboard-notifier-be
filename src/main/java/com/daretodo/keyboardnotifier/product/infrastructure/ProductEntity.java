@@ -61,7 +61,7 @@ public class ProductEntity extends BaseTimeEntity {
 
     public static ProductEntity fromDomain(Product product) {
         ProductEntity productEntity = new ProductEntity();
-        String productImageUrl = convertFromListToString(product.getImageUrl());
+        String productImageUrl = convertFromListToString(product.getImageUrls());
 
         productEntity.name = product.getName();
         productEntity.price = product.getPrice();
@@ -89,6 +89,7 @@ public class ProductEntity extends BaseTimeEntity {
 
     private static String convertFromListToString(List<String> imageUrls) {
         StringBuilder sb = new StringBuilder();
+
         for (String imageUrl : imageUrls) {
             sb.append(imageUrl).append(",");
         }
@@ -110,7 +111,7 @@ public class ProductEntity extends BaseTimeEntity {
                 .name(name)
                 .price(price)
                 .priceUnit(priceUnit)
-                .imageUrl(imageUrls)
+                .imageUrls(imageUrls)
                 .productUrl(productUrl)
                 .type(type)
                 .description(description)
