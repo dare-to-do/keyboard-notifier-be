@@ -3,12 +3,13 @@ package com.daretodo.keyboardnotifier.groupbuy.infrastructure;
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuy;
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuyStatus;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "group_buys")
@@ -47,6 +48,15 @@ public class GroupBuyEntity {
                 .map(GroupBuyParticipantEntity::from)
                 .toList();
         return entity;
+    }
+
+    public static List<GroupBuyEntity> from(List<GroupBuy> groupBuys) {
+        List<GroupBuyEntity> groupBuyEntities = new ArrayList<>();
+        for (GroupBuy groupBuy: groupBuys) {
+            groupBuyEntities.add(from(groupBuy));
+        }
+
+        return groupBuyEntities;
     }
 
     public GroupBuy toDomain() {
