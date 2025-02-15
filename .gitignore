@@ -40,3 +40,5 @@ out/
 /*.pem
 
 /src/*/resources/*.yml
+
+/src/main/generated/*

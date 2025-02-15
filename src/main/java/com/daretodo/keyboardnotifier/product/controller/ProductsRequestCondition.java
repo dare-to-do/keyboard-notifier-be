@@ -6,10 +6,12 @@ import com.daretodo.keyboardnotifier.product.domain.ProductType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ProductsRequestCondition extends PageRequestCondition {
 
     @Schema(description = "공제 상태")

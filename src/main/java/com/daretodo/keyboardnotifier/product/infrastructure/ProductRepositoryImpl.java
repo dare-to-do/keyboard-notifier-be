@@ -1,6 +1,7 @@
 package com.daretodo.keyboardnotifier.product.infrastructure;
 
 import com.daretodo.keyboardnotifier.product.controller.ProductSortBy;
+import com.daretodo.keyboardnotifier.product.domain.PriceUnit;
 import com.daretodo.keyboardnotifier.product.domain.Product;
 import com.daretodo.keyboardnotifier.product.domain.ProductRepository;
 import com.daretodo.keyboardnotifier.product.domain.ProductStatus;
@@ -50,8 +51,18 @@ public class ProductRepositoryImpl implements ProductRepository {
         if (sortBy != null) {
             switch (sortBy) {
                 case NEWEST -> query.orderBy(productEntity.createdAt.desc());
-                case HIGH_PRICE -> query.orderBy(productEntity.price.desc());
-                case LOW_PRICE -> query.orderBy(productEntity.price.asc());
+                case HIGH_PRICE -> query.orderBy(
+                    productEntity.priceUnit.when(PriceUnit.USD)
+                        .then(productEntity.price.multiply(1400))
+                        .otherwise(productEntity.price)
+                        .desc()
+                );
+                case LOW_PRICE -> query.orderBy(
+                    productEntity.priceUnit.when(PriceUnit.USD)
+                        .then(productEntity.price.multiply(1400))
+                        .otherwise(productEntity.price)
+                        .asc()
+                );
                 case OLDEST -> query.orderBy(productEntity.createdAt.asc());
             }
         }
@@ -120,5 +131,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     private ProductEntity findProductEntityById(Long id) {
         return productJpaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+    }
+
+    @Override
+    public void delete(Product product) {
+        ProductEntity productEntity = findProductEntityById(product.getId());
+        productEntity.delete();
     }
 }

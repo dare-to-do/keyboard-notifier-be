@@ -32,8 +32,12 @@ public class ProductService {
         return createdProducts.size();
     }
 
-    public Page<ProductResponse> findAllProducts(ProductStatus productStatus, ProductType productType,
-                                                 Pageable pageable, ProductSortBy sortBy) {
+    public Page<ProductResponse> findAllProducts(
+        ProductStatus productStatus,
+        ProductType productType,
+        Pageable pageable,
+        ProductSortBy sortBy
+    ) {
         Page<Product> products = productRepository.findAllProducts(productStatus, productType, pageable, sortBy);
         return productMapper.toProductResponsePage(products);
     }
@@ -52,7 +56,6 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId);
-        product.delete();
-        productRepository.save(product);
+        productRepository.delete(product);
     }
 }

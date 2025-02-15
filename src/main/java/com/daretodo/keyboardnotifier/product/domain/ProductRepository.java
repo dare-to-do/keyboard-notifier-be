@@ -20,4 +20,6 @@ public interface ProductRepository {
     void increaseViewCount(Product product);
 
     void save(Product product);
+
+    void delete(Product product);
 }

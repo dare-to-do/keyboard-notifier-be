@@ -51,4 +51,8 @@ public class GroupBuyParticipantEntity {
             .status(status)
             .build();
     }
+
+    public void updateStatus(GroupBuyParticipantStatus groupBuyParticipantStatus) {
+        this.status = groupBuyParticipantStatus;
+    }
 }

@@ -86,7 +86,7 @@ class GroupBuyTest {
                 .status(GroupBuyStatus.IN_PROGRESS)
                 .endDateTime(LocalDateTime.now().plusDays(1))
                 .participants(List.of(
-                    GroupBuyParticipant.builder().userId(1L).status(GroupBuyParticipantStatus.ACTIVE).build()
+                    GroupBuyParticipant.builder().userId(1L).status(GroupBuyParticipantStatus.PARTICIPATED).build()
                 ))
                 .build();
             GroupBuyParticipant alreadyJoinedParticipant = GroupBuyParticipant.builder().userId(1L).build();

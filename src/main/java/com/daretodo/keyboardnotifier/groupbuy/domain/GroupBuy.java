@@ -1,10 +1,10 @@
 package com.daretodo.keyboardnotifier.groupbuy.domain;
 
-import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,17 +14,27 @@ public class GroupBuy {
     private final LocalDateTime startDateTime;
     private final LocalDateTime endDateTime;
     private final GroupBuyStatus status;
-    private List<GroupBuyParticipant> participants;
+    private final List<GroupBuyParticipant> participants;
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
+    private final String createdBy;
+    private final String updatedBy;
 
     @Builder
     public GroupBuy(Long id, Long productId, LocalDateTime startDateTime, LocalDateTime endDateTime,
-                   GroupBuyStatus status, List<GroupBuyParticipant> participants) {
+                   GroupBuyStatus status, List<GroupBuyParticipant> participants,
+                    LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+
         this.id = id;
         this.productId = productId;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.status = status;
         this.participants = participants != null ? new ArrayList<>(participants) : new ArrayList<>();
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.createdBy = createdBy;
+        this.updatedBy = updatedBy;
     }
 
     public boolean canJoin() {

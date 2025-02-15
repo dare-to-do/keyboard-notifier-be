@@ -1,5 +1,6 @@
 package com.daretodo.keyboardnotifier.groupbuy.infrastructure;
 
+import com.daretodo.keyboardnotifier.common.BaseTimeEntity;
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuy;
 import com.daretodo.keyboardnotifier.groupbuy.domain.GroupBuyStatus;
 import jakarta.persistence.*;
@@ -8,14 +9,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "group_buys")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GroupBuyEntity {
+public class GroupBuyEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,6 +48,10 @@ public class GroupBuyEntity {
         entity.groupBuyParticipants = groupBuy.getParticipants().stream()
                 .map(GroupBuyParticipantEntity::from)
                 .toList();
+        entity.createdAt = groupBuy.getCreatedAt();
+        entity.updatedAt = groupBuy.getUpdatedAt();
+        entity.createdBy = groupBuy.getCreatedBy();
+        entity.updatedBy = groupBuy.getUpdatedBy();
         return entity;
     }
 
@@ -68,6 +73,10 @@ public class GroupBuyEntity {
             .status(status)
             .participants(groupBuyParticipants.stream()
                 .map(GroupBuyParticipantEntity::toDomain).toList())
+            .createdAt(createdAt)
+            .updatedAt(updatedAt)
+            .createdBy(createdBy)
+            .updatedBy(updatedBy)
             .build();
     }
 }
