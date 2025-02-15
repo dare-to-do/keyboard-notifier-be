@@ -39,8 +39,8 @@ public class ProductFixtureBuilder {
         return this;
     }
 
-    public ProductFixtureBuilder imageUrl(List<String> imageUrl) {
-        fields.put("imageUrl", imageUrl);
+    public ProductFixtureBuilder imageUrls(List<String> imageUrls) {
+        fields.put("imageUrls", imageUrls);
         return this;
     }
 
@@ -102,7 +102,7 @@ public class ProductFixtureBuilder {
             case "name" -> javaGetter(Product::getName);
             case "price" -> javaGetter(Product::getPrice);
             case "unit" -> javaGetter(Product::getPriceUnit);
-            case "imageUrl" -> javaGetter(Product::getImageUrl);
+            case "imageUrls" -> javaGetter(Product::getImageUrls);
             case "productUrl" -> javaGetter(Product::getProductUrl);
             case "productType" -> javaGetter(Product::getType);
             case "description" -> javaGetter(Product::getDescription);
