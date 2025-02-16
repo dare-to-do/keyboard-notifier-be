@@ -67,6 +67,7 @@ public class ProductEntity extends BaseTimeEntity {
         productEntity.price = product.getPrice();
         productEntity.priceUnit = product.getPriceUnit();
         productEntity.imageUrl = productImageUrl;
+        productEntity.productUrl = product.getProductUrl();
         productEntity.type = product.getType();
         productEntity.description = product.getDescription();
         productEntity.period = product.getPeriod().isEmpty() ? null : product.getPeriod().get();
