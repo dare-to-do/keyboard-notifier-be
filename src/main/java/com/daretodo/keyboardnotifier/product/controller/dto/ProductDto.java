@@ -60,11 +60,11 @@ public record ProductDto(
     private ProductStatus getProductStatus(LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime now = LocalDateTime.now();
         if (startDate != null && now.isBefore(startDate)) {
-            return ProductStatus.PENDING;
+            return ProductStatus.NOT_YET;
         }
 
         if (endDate != null && now.isAfter(endDate)) {
-            return ProductStatus.COMPLETED;
+            return ProductStatus.DONE;
         }
 
         return ProductStatus.IN_PROGRESS;
