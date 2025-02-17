@@ -70,7 +70,7 @@ class GroupBuyTest {
         void 공제_참여가_불가능한_경우_예외가_발생한다() {
             // given
             GroupBuy groupBuy = GroupBuy.builder()
-                .status(GroupBuyStatus.COMPLETED)
+                .status(GroupBuyStatus.DONE)
                 .build();
             GroupBuyParticipant participant = GroupBuyParticipant.builder().build();
 

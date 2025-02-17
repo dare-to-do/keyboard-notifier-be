@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 public enum GroupBuyStatus {
-    PENDING("예정"),
+    NOT_YET("예정"),
     IN_PROGRESS("진행"),
-    COMPLETED("완료"),
+    DONE("완료"),
     FAILED("실패"),
     CANCELLED("취소"),
     DELETED("삭제"),
