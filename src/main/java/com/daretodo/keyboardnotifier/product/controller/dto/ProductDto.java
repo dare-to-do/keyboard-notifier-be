@@ -1,6 +1,7 @@
 package com.daretodo.keyboardnotifier.product.controller.dto;
 
 import com.daretodo.keyboardnotifier.product.domain.*;
+import jakarta.annotation.Nullable;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
@@ -16,13 +17,18 @@ public record ProductDto(
         String productUrl,
         String productType,
         String description,
+        @Nullable
         LocalDateTime startDate,
+        @Nullable
         LocalDateTime endDate
 ) {
 
     public Product toProduct() {
+        if (startDate == null && endDate == null) {
+            throw new IllegalArgumentException("시작일과 종료일 중 하나 이상을 입력해주세요.");
+        }
 
-        if (startDate.isAfter(endDate)) {
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("시작일은 종료일보다 이전이어야 합니다.");
         }
 
@@ -53,11 +59,11 @@ public record ProductDto(
 
     private ProductStatus getProductStatus(LocalDateTime startDate, LocalDateTime endDate) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(startDate)) {
+        if (startDate != null && now.isBefore(startDate)) {
             return ProductStatus.PENDING;
         }
 
-        if (now.isAfter(endDate)) {
+        if (endDate != null && now.isAfter(endDate)) {
             return ProductStatus.COMPLETED;
         }
 
