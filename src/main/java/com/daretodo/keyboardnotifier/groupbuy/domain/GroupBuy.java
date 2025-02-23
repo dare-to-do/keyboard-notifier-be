@@ -38,8 +38,16 @@ public class GroupBuy {
     }
 
     public boolean canJoin() {
-        return status == GroupBuyStatus.IN_PROGRESS &&
-               LocalDateTime.now().isBefore(endDateTime);
+        if (status == GroupBuyStatus.NOT_YET) {
+            return true;
+        }
+        if (endDateTime != null && LocalDateTime.now().isBefore(endDateTime)) {
+            return true;
+        }
+        if (status == GroupBuyStatus.IN_PROGRESS) {
+            return true;
+        }
+        return false;
     }
 
     public void addParticipant(GroupBuyParticipant participant) {
