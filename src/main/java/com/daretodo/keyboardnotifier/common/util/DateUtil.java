@@ -5,6 +5,9 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
     public static String formatDateWithTime(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return "";
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시");
         return localDateTime.format(formatter);
     }
