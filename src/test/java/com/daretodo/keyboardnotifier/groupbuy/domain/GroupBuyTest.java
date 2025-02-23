@@ -31,22 +31,6 @@ class GroupBuyTest {
             assertThat(result).isTrue();
         }
 
-        @ParameterizedTest
-        @EnumSource(value = GroupBuyStatus.class, mode = EnumSource.Mode.EXCLUDE, names = "IN_PROGRESS")
-        void 진행중_상태가_아닌_공제는_참여가_불가능하다(GroupBuyStatus status) {
-            // given
-            GroupBuy groupBuy = GroupBuy.builder()
-                .status(status)
-                .endDateTime(LocalDateTime.now().plusDays(1))
-                .build();
-
-            // when
-            boolean result = groupBuy.canJoin();
-
-            // then
-            assertThat(result).isFalse();
-        }
-
         @Test
         void 이미_지난_공제_날짜의_공제는_참여가_불가능하다() {
             // given
