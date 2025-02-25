@@ -52,14 +52,20 @@ public class ProductRepositoryImpl implements ProductRepository {
             switch (sortBy) {
                 case NEWEST -> query.orderBy(productEntity.createdAt.desc());
                 case HIGH_PRICE -> query.orderBy(
-                    productEntity.priceUnit.when(PriceUnit.USD)
+                    productEntity.priceUnit
+                        .when(PriceUnit.USD)
                         .then(productEntity.price.multiply(1400))
+                        .when(PriceUnit.CNY)
+                        .then(productEntity.price.multiply(197))
                         .otherwise(productEntity.price)
                         .desc()
                 );
                 case LOW_PRICE -> query.orderBy(
-                    productEntity.priceUnit.when(PriceUnit.USD)
+                    productEntity.priceUnit
+                        .when(PriceUnit.USD)
                         .then(productEntity.price.multiply(1400))
+                        .when(PriceUnit.CNY)
+                        .then(productEntity.price.multiply(197))
                         .otherwise(productEntity.price)
                         .asc()
                 );
